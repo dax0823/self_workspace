@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>熊猫贷-后台统计工具</title>
+<meta http-equiv="description" content="pandadai">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="./framework/layout-default-latest.css">
+<link rel="stylesheet" type="text/css" href="./framework/jstree/themes/default/style.min.css" />
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link rel="stylesheet" type="text/css" href="./framework/daterangepicker/bootstrap.min.css" /> -->
+<link rel="stylesheet" type="text/css" href="./framework/daterangepicker/daterangepicker-bs3.css" />
+<link rel="stylesheet" type="text/css" href="./framework/datatable/css/jquery.dataTables.min.css" />
+<link href='./framework/fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='./framework/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+<link rel="stylesheet" href="./framework/zebra_datepicker/reset.css" type="text/css">
+<link rel="stylesheet" href="./framework/zebra_datepicker/default.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="./css/index.css">
+
+<script type="text/javascript" src="./framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./framework/jquery.layout-latest.js"></script>
+<script type="text/javascript" src="./framework/jstree/jstree.min.js"></script>
+<script type="text/javascript" src="./framework/datatable/js/jquery.dataTables.min.js"></script>
+<!-- <script type="text/javascript" src="./framework/datatable/js/jquery.dataTables.js"></script> -->
+<script type="text/javascript" src="./framework/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="./framework/daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript" src='./framework/fullcalendar/moment.min.js'></script>
+<script type="text/javascript" src='./framework/fullcalendar/fullcalendar.min.js'></script>
+<script type="text/javascript" src='./framework/highcharts/highcharts.js'></script>
+<script type="text/javascript" src='./framework/highcharts/highcharts-3d.js'></script>
+<script type="text/javascript" src="./framework/zebra_datepicker/zebra_datepicker.js"></script>
+
+<script type="text/javascript" src="./js/utils/constants.js"></script>
+<script type="text/javascript" src="./js/utils/variable.js"></script>
+<script type="text/javascript" src="./js/utils/utils.js"></script>
+<script type="text/javascript" src="./js/index.js"></script>
+
+<script type="text/javascript" src="./js/fin/inpour/home.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/detail.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/reward.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/withdraw.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/revise.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/continue.js"></script>
+<script type="text/javascript" src="./js/fin/inpour/capital_change.js"></script>
+
+<script type="text/javascript" src="./js/fin/invest/home.js"></script>
+<script type="text/javascript" src="./js/fin/invest/customer.js"></script>
+<script type="text/javascript" src="./js/fin/invest/admin.js"></script>
+<script type="text/javascript" src="./js/fin/invest/remind.js"></script>
+<script type="text/javascript" src="./js/fin/invest/borrowor.js"></script>
+<script type="text/javascript" src="./js/fin/top/home.js"></script>
+<script type="text/javascript" src="./js/fin/report/home.js"></script>
+<script type="text/javascript" src="./js/fin/report/borrow.js"></script>
+<script type="text/javascript" src="./js/fin/report/second.js"></script>
+<script type="text/javascript" src="./js/fin/report/filing.js"></script>
+
+<script type="text/javascript" src="./js/biz/home.js"></script>
+<script type="text/javascript" src="./js/biz/lottery/log.js"></script>
+
+<script type="text/javascript" src="./js/adjust/integral.js"></script>
+</head>
+
+<body>
+	<div class="ui-layout-center">请选择左侧的功能模块。</div>
+	<div class="ui-layout-north">
+		<img alt="熊猫贷欢迎您！" src="./image/logo.gif">
+		<span class="userInfoDiv">
+			<span class="username"></span>，您好。我要<a class="logout">退出</a>
+		</span>
+	</div>
+	<!-- 	<div class="ui-layout-south">South</div> -->
+	<!-- 	<div class="ui-layout-east">East</div> -->
+	<div class="ui-layout-west">
+		<div id="leftTree">Loading...</div>
+	</div>
+</body>
+</html>

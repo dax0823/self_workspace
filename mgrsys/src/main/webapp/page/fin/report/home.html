@@ -1,0 +1,47 @@
+<div id="finReportHomeDiv">
+	<h2>运营情况统计</h2>
+	<hr>
+	<div id="finReportHomeInfoDiv">
+		（默认查询上月的数据）<br />
+		<div class="container"></div>
+		 时间：<input type="text" class="month" value="" />
+		<input type="button" id="finReportInfoBtn" class="btn" value="查询" />
+		<br />
+		<table id="finReportHomeInfoTable">
+			<tr>
+				<td>时间：<span class="tdMonth"></span>月</td>
+				<td>总投资人数：<span class="tdNumbers"></span>人</td>
+				<td>总成交量：<span class="tdVolume"></span>元</td>
+			</tr>
+			<tr>
+				<td>本金回款：<span class="tdCapitalBack"></span>元</td>
+				<td>利息回款：<span class="tdInterestBack"></span>元</td>
+				<td>利息手续费：<span class="tdFee"></span>元</td>
+			</tr>
+			<tr>
+				<td colspan="3">最终获利：<span class="tdProfit"></span>元</td>
+			</tr>
+			<tr>
+				<td>待收本金回款：<span class="tdCapitalUncollected"></span>元</td>
+				<td>待收利息回款：<span class="tdInterestUncollected"></span>元</td>
+				<td>待收利息手续费：<span class="tdFeeUncollected"></span>元</td>
+			</tr>
+			<tr>
+				<td colspan="3">总待收：<span class="tdSumUncollected"></span>元</td>
+			</tr>
+			<tr>
+				<td colspan="3">平均每人收益：<span class="tdAverageProfit"></span>元</td>
+			</tr>
+			<tr>
+				<td colspan="3"><hr></td>
+			</tr>
+			<tr>
+				<td>新注册人数：<span class="tdRegisterNew"></span>人</td>
+				<td colspan="2">总注册人数：<span class="tdRegisterSum"></span>人</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="error">莫急，本月都还没过完，数据没出来呢。</div>
+	<br/>
+</div>

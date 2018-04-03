@@ -1,0 +1,141 @@
+<div id="bizHomeDiv">
+	<table id="bizHomeTable">
+		<tr>
+			<td><h3>整体资金：<span class="tdAllMoney">待需求确定……</span> </h3></td>
+			<td><h3>借出金额：<span class="tdBorrowMoney"></span> 元</h3></td>
+		</tr>
+		<tr>
+			<td colspan="2"><h3>可用资金：<span class="tdUsableMoney"></span> 元</h3></td>
+		</tr>
+		<tr class="trAuto">
+			<td>自动投标人数：<span class="tdAutoNum"></span> 人</td>
+			<td>自动投标额度：<span class="tdAutoMoney"></span> 元</td>
+		</tr>
+		<tr>
+			<td>当日充值：<span class="tdInpourMoney"></span> 元</td>
+			<td>当日提现：<span class="tdWithdrawMoney"></span> 元</td>
+		</tr>
+		<tr class="trBalance">
+			<td>当日进出：<span class="tdTodayBalance"></span> 元</td>
+			<td>昨日进出：<span class="tdYesterdayBalance"></span> 元</td>
+		</tr>
+		<tr class="trBalance">
+			<td>本周进出：<span class="tdThisWeekBalance"></span> 元</td>
+			<td>上周进出：<span class="tdLastWeekBalance"></span> 元</td>
+		</tr>
+	</table>
+<!-- 	<input type="button"  value="temp" /> -->
+	<div id="bizHomeDetailDiv">
+		<hr>
+		<b>自动投标排队情况</b><input type="button" class="btn"  value="收起" />
+		<table id="bizHomeAutoDetailTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<br/>
+	</div>
+	<div id="bizHomeBalanceDiv">
+		<hr>
+		<b><span class="prefixBalance"></span>资金进出详情</b><input type="button" class="btn"  value="收起" />
+		<div>
+			<div class="halfBalance">
+				充值小计：<span class="sum"></span> 元。
+				<table id="bizHomeBalanceInpourTable">
+					<thead>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="halfBalance right">
+				提现小计：<span class="sum"></span> 元。
+				<table id="bizHomeBalanceWithdrawTable">
+					<thead>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br/>
+	</div>
+	<div id="bizHomeCustomerDiv">
+		<hr>
+		<b>用户个人详情</b><input type="button" class="btn"  value="收起" />
+		<table id="bizHomeCustomerTable">
+			<tr>
+				<td>用户名：<span class="tdUserName"></span></td>
+				<td colspan="2">编号：<span class="tdUserId"></span></td>
+			</tr>
+			<tr>
+				<td>真实姓名：<span class="tdRealName"></span></td>
+				<td colspan="2">性别：<span class="tdSex"></span></td>
+			</tr>
+			<tr>
+				<td>推荐人：<span class="tdRecommendUser"></span></td>
+				<td>VIP客服：<span class="tdCustomerName"></span></td>
+				<td>冻结情况：<span class="tdIsFreeze">待需求确定……</span></td>
+			</tr>
+			<tr>
+				<td colspan="3">身份证号：<span class="tdIDCard"></span></td>
+			</tr>
+			<tr>
+				<td>手机号：<span class="tdMobile"></span></td>
+				<td colspan="2">邮箱：<span class="tdEmail"></span></td>
+			</tr>
+			<tr>
+				<td colspan="3">地址：<span class="tdAddress"></span></td>
+			</tr>
+		</table>
+		<table id="bizHomeCustomerMoneyTable">
+			<tr>
+				<td><h3>资金状况</h3></td>
+				<td><h3>充值/提现</h3></td>
+			</tr>
+			<tr>
+				<td>账户总额：<span class="tdAccountSum"></span></td>
+				<td>充值次数：<span class="tdInpourNum"></span></td>
+			</tr>
+			<tr>
+				<td>待收总额：<span class="tdCollectSum"></span></td>
+				<td>充值额度：<span class="tdInpourSum"></span></td>
+			</tr>
+			<tr>
+				<td>可用金额：<span class="tdUsableMoney"></span></td>
+				<td>提现次数：<span class="tdWithdrawNum"></span></td>
+			</tr>
+			<tr>
+				<td>冻结金额：<span class="tdFreezeMoney"></span></td>
+				<td>提现额度：<span class="tdWithdrawSum"></span></td>
+			</tr>
+		</table>
+		<div id="bizHomeOtherTab">
+			<br/>
+			<span ref="otherInvest" class="on">投标信息</span> | <span ref="otherIdCard">身份证</span> | <span ref="otherMoneyLog">资金变动</span>
+		</div>
+		<div id="bizHomeOtherContentDiv">
+			<div id="bizHomeOtherInvestDiv" class="div on">
+				<table id="bizHomeInvestTable">
+					<thead>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div id="bizHomeOtherIdCardDiv" class="div">
+				<img />
+			</div>
+			<div id="bizHomeOtherMoneyLogDiv" class="div">
+				<table id="bizHomeMoneyLogTable">
+					<thead>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br/>
+	</div>
+</div>

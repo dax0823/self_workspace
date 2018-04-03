@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- 充值总览 -->
+	<bean id="inpourHomeImpl" class="com.pandadai.finance.dao.impl.InpourHomeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlCurrDate"
+			value="select sum(money) from LZH_MEMBER_PAYONLINE where status = 1 and DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m-%d') = curdate() GROUP BY way;" />
+		<property name="sqlLast7Day"
+			value="select sum(money) from LZH_MEMBER_PAYONLINE where status = 1 and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(add_time) GROUP BY way;" />
+		<property name="sqlLastMonth"
+			value="select sum(money) from LZH_MEMBER_PAYONLINE where status = 1 and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(add_time) GROUP BY way;" />
+		
+		<!-- 按天统计总额明细（仅获取前一个月内的数据） -->
+		<property name="sqlEveryDay">
+			<value>
+				select DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m-%d') add_time,
+				sum(CASE way WHEN 'easypay' THEN money ELSE 0 END ) easypay,
+				sum(CASE way WHEN 'baofoo' THEN money ELSE 0 END ) baofoo,
+				sum(CASE
+				way WHEN 'off' THEN money ELSE 0 END ) off
+				from LZH_MEMBER_PAYONLINE
+				where status = 1 and 1=1
+				<!-- and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(add_time) -->
+				GROUP BY DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m-%d')
+				order by
+				add_time desc;
+			</value>
+		</property>
+		<property name="sqlEveryDayDefaultCondition" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(add_time)" />
+		
+		<!-- 按月统计总额明细（仅获取前12个月内的数据） -->
+		<property name="sqlEveryMonth">
+			<value>
+				select DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m') add_time,
+				sum(CASE way WHEN 'easypay' THEN money ELSE 0 END ) easypay,
+				sum(CASE way WHEN 'baofoo' THEN money ELSE 0 END ) baofoo,
+				sum(CASE way WHEN 'off' THEN money ELSE 0 END ) off
+				from LZH_MEMBER_PAYONLINE
+				where status = 1 and 1=1
+<!-- 				and DATE_SUB(CURDATE(), INTERVAL 1 YEAR) &lt;=FROM_UNIXTIME(add_time)-->
+				GROUP BY DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m')
+				order by add_time desc;
+			</value>
+		</property>
+		<property name="sqlEveryMonthDefaultCondition" value="and DATE_SUB(CURDATE(), INTERVAL 1 YEAR) &lt;= FROM_UNIXTIME(add_time)" />
+		
+		<!-- 所有客户充值明细：（当天、最近 7 天、最近一个月） -->
+		<property name="sqlInpour">
+			<value>
+			select m.user_name, p.money, FROM_UNIXTIME(p.add_time) inpour_time, p.way from LZH_MEMBER_PAYONLINE p, lzh_members m
+			where p.status = 1 and p.uid = m.id 
+			and 1=1
+			order by p.add_time desc;
+			</value>
+		</property>
+<!-- 		<property name="sqlInpourCurrDate" value="and DATE_FORMAT(FROM_UNIXTIME(p.add_time),'%Y-%m-%d') = '2014-08-19'" /> -->
+		<property name="sqlInpourCurrDate" value="and DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m-%d') = curdate()" />
+		<property name="sqlInpourLast7Day" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(p.add_time)" />
+		<property name="sqlInpourLastMonth" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(p.add_time)" />
+	</bean>
+	<bean id="inpourHomeHandler" class="com.pandadai.finance.handler.InpourHomeHandler">
+		<property name="inpourHomeImpl" ref="inpourHomeImpl" />
+	</bean>
+
+<!-- 查询某段时间内，客户的充值情况，以天为单位 -->
+	<bean id="inpourDetailImpl" class="com.pandadai.finance.dao.impl.InpourDetailDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 所有客户充值明细：（当天、最近 7 天、最近一个月） -->
+		<property name="sqlInpour">
+			<value>
+			select FROM_UNIXTIME(p.add_time) inpour_time, p.uid, m.user_name, p.money summy, way from LZH_MEMBER_PAYONLINE p, lzh_members m
+				where p.status = 1 and p.uid = m.id 
+					and 1=1
+			order by p.add_time desc;
+			</value>
+		</property>
+		<property name="sqlInpourDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(p.add_time)" />
+		<property name="sqlInpourParamBaofoo" value="baofoo" />
+		<property name="sqlInpourParamEasypay" value="easypay" />
+		<property name="sqlInpourParamOff" value="off" />
+		<property name="sqlInpourCustomer">
+			<value>
+				select m.user_name, FROM_UNIXTIME(p.add_time) inpour_time, p.money,  way from LZH_MEMBER_PAYONLINE p, lzh_members m
+					where status = 1 and p.uid = m.id 
+						and 1=1
+				order by p.add_time desc;
+			</value>
+		</property>
+	</bean>
+	<bean id="inpourDetailHandler" class="com.pandadai.finance.handler.InpourDetailHandler">
+		<property name="inpourDetailImpl" ref="inpourDetailImpl" />
+	</bean>
+	
+<!-- 	查询客户的下线充值奖励信息 -->
+	<bean id="inpourRewardImpl" class="com.pandadai.finance.dao.impl.InpourRewardDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlReward">
+			<value>
+<!-- 				select DATE_FORMAT(FROM_UNIXTIME(mm.add_time),'%Y-%m') reward_month, m.user_name, p.uid, sum(mm.affect_money) reward_sum, sum(p.money) money_sum -->
+<!-- 				from lzh_member_moneylog mm, LZH_MEMBER_PAYONLINE p, lzh_members m -->
+<!-- 					where mm.type = 32 and mm.uid = m.id and m.id = p.uid and p.way = 'off' and p.money >= 5000 -->
+<!-- 						and 1=1 -->
+<!-- 				group by mm.uid, DATE_FORMAT(FROM_UNIXTIME(mm.add_time),'%Y-%m') -->
+<!-- 				order by mm.add_time desc; -->
+				select DATE_FORMAT(FROM_UNIXTIME(p.add_time),'%Y-%m') reward_month, m.user_name, p.uid, sum(p.money) money_sum
+					, sum(case when p.money >= 5000 and p.money &lt; 20000 then p.money * 0.0015
+								when p.money >= 20000 and p.money &lt; 50000 then p.money * 0.002
+							when p.money >= 50000 then p.money * 0.0025 
+				 				else 0
+						end) reward_sum
+				from LZH_MEMBER_PAYONLINE p, lzh_members m
+					where m.id = p.uid and p.way = 'off' and p.money >= 5000
+						and 1=1
+				group by m.id, DATE_FORMAT(FROM_UNIXTIME(p.add_time),'%Y-%m')
+				order by p.add_time desc;
+			</value>
+		</property>
+		<property name="sqlRewardDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 3 MONTH) &lt;= FROM_UNIXTIME(p.add_time)" />
+		<!-- 单个客户本月充值明细 -->
+		<property name="sqlRewardCus">
+			<value>
+				select p.uid, FROM_UNIXTIME(p.add_time) reward_time, m.user_name, p.money from LZH_MEMBER_PAYONLINE p, lzh_members m
+					where status = 1 and p.uid = m.id and p.way = 'off' and p.money >= 5000
+<!-- 						and DATE_FORMAT(FROM_UNIXTIME(p.add_time),'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m') -->
+						and 1=1
+				order by p.add_time desc;
+			</value>
+		</property>
+<!-- 		<property name="sqlRewardCusDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(p.add_time)" /> -->
+	</bean>
+	<bean id="inpourRewardHandler" class="com.pandadai.finance.handler.InpourRewardHandler">
+		<property name="inpourRewardImpl" ref="inpourRewardImpl" />
+	</bean>
+	
+<!-- 	查询客户提现信息 -->
+	<bean id="inpourWithdrawImpl" class="com.pandadai.finance.dao.impl.InpourWithdrawDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlWithdraw">
+			<value>
+<!-- 				select m.id, m.user_name, mi.real_name, mb.bank_num, mb.bank_province, mb.bank_city, mb.bank_address, mb.bank_name, mw.withdraw_money, mw.withdraw_fee  -->
+<!-- 				from lzh_member_withdraw mw, lzh_members m, lzh_member_banks mb, lzh_member_info mi -->
+<!-- 					where m.id = mw.uid and m.id = mb.uid and m.id = mi.uid  -->
+<!-- 						and mw.withdraw_status = 2 -->
+<!-- 						and 1=1 -->
+<!-- 				order by mw.add_time desc; -->
+				select mw.id withdraw_id, FROM_UNIXTIME(mw.add_time) withdraw_time, mw.withdraw_money, mw.withdraw_fee, mw.success_money
+					, case mw.withdraw_status when '0' then '待审核' when '1' then '处理中' when '2' then '已提现' when '3' then '未通过' else mw.withdraw_status end withdraw_status
+					, mm.id user_id, mm.user_name, mmi.real_name, mb.bank_num, mb.bank_address, mb.bank_name, mb.bank_province, mb.bank_city
+				from lzh_member_withdraw mw
+					, lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid 
+						LEFT JOIN lzh_member_banks mb on mm.id = mb.uid
+					where mw.uid = mm.id
+						and 1=1
+				ORDER BY mw.add_time desc;
+			</value>
+		</property>
+		<property name="sqlWithdrawDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(mw.add_time)" />
+
+		<!-- 待审核提现手续费 -->
+		<property name="sqlPendingWithdraw">
+			<value>
+				select a.id, a.user_name, a.real_name, a.withdraw_time, a.withdraw_money, a.account_money, sum(mp.money) as inpour_money
+				from (
+					select mm.id, mm.user_name, mmi.real_name, FROM_UNIXTIME(mw.add_time) withdraw_time, mw.withdraw_money, mmy.account_money + mmy.back_money + mmy.money_freeze as account_money
+						from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+							, lzh_member_withdraw mw, lzh_member_money mmy
+						where mm.id = mw.uid
+							and mm.id = mmy.uid
+							and mw.withdraw_status = 0
+					order by mw.add_time desc
+				) a LEFT JOIN lzh_member_payonline mp on a.id = mp.uid and mp.status = 1 and DATE_SUB(CURDATE(), INTERVAL 15 DAY) &lt;= FROM_UNIXTIME(mp.add_time)
+				GROUP BY a.id
+			</value>
+		</property>
+	</bean>
+	<bean id="inpourWithdrawHandler" class="com.pandadai.finance.handler.InpourWithdrawHandler">
+		<property name="inpourWithdrawImpl" ref="inpourWithdrawImpl" />
+	</bean>
+	
+	<!-- 	管理员修改记录信息 -->
+	<bean id="inpourReviseImpl" class="com.pandadai.finance.dao.impl.InpourReviseDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlRevise">
+			<value>
+				select FROM_UNIXTIME(mm.add_time) revise_time, m.id, m.user_name, mi.real_name, mm.affect_money, mm.info 
+				from LZH_MEMBER_MONEYLOG mm, lzh_members m, lzh_member_info mi
+					where m.id = mm.uid and m.id = mi.uid and mm.type = 7 
+						and 1=1
+				order by mm.add_time desc;
+			</value>
+		</property>
+		<property name="sqlReviseDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(mm.add_time)" />
+	</bean>
+	<bean id="inpourReviseHandler" class="com.pandadai.finance.handler.InpourReviseHandler">
+		<property name="inpourReviseImpl" ref="inpourReviseImpl" />
+	</bean>
+	
+	<!--	客户续投奖励记录信息 -->
+	<bean id="inpourContinueImpl" class="com.pandadai.finance.dao.impl.InpourContinueDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlContinue">
+			<value>
+				select FROM_UNIXTIME(tr.add_time) continue_time, m.id, m.user_name, mi.real_name, tr.reward_money, tr.invest_money
+				from lzh_today_reward tr, lzh_members m, lzh_member_info mi
+					where tr.reward_uid = m.id and m.id = mi.uid and tr.reward_status = 1
+						and 1=1
+				ORDER BY tr.add_time desc;
+			</value>
+		</property>
+		<property name="sqlContinueDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(tr.add_time)" />
+	</bean>
+	<bean id="inpourContinueHandler" class="com.pandadai.finance.handler.InpourContinueHandler">
+		<property name="inpourContinueImpl" ref="inpourContinueImpl" />
+	</bean>
+	
+	<!--	用户资金变动记录信息 -->
+	<bean id="inpourCapitalChangeDaoImpl" class="com.pandadai.finance.dao.impl.InpourCapitalChangeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlCapitalChange">
+			<value>
+				select FROM_UNIXTIME(mml.add_time) time, mm.id, mm.user_name
+<!-- 				, mmi.real_name -->
+					, mml.type, mml.affect_money, mml.account_money, mml.back_money, mml.collect_money, mml.freeze_money, mml.target_uid, mml.target_uname, mml.info
+				from lzh_members mm 
+<!-- 					LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid -->
+					, lzh_member_moneylog mml
+					where mm.id = mml.uid
+<!-- 						and DATE_SUB(CURDATE(), INTERVAL 3 DAY) &lt;= FROM_UNIXTIME(mml.add_time) -->
+							and 1=1
+				ORDER BY mml.add_time desc
+			</value>
+		</property>
+		<property name="sqlCapitalChangeDefaultDuring" value="and DATE_FORMAT(FROM_UNIXTIME(mml.add_time),'%Y-%m-%d') = curdate()" />
+		<property name="typeName" value="3:充值;4:提现;5:撤消提现;6:投标;7:管理员操作;8:流标，返回冻结资金;9:还款（到投资人）;11:（借款人）还款;12:提现未通过，返还;13:推广奖励;15:本金冻结;16:复审未通过，返回冻结资金;17:复审通过，（借款人）借款金额入帐;18:（借款人）借款成功，扣除借款管理费;20:投标奖励;21:复审通过，支付投标奖励;23:利息管理费扣除;24:（借款人）还款完成，解冻保证金;27:管理员手动审核充值;28:复审通过，应收利息成为待收利息;29:提现，（无手续费）实际到账金额;32:线下充值奖励;33:投标（复审前）预奖励;34:续投预奖励到账;35:续投奖励预奖励取消;36:提现，（扣手续费）实际到账金额;37:企业标投标;38:企业标待收利息;39:企业标冻结本金;41:企业标获得投标奖励;42:企业标支付投标奖励;44:企业标向投资人还款;45:积分抽奖获得礼金;" />
+	</bean>
+	<bean id="inpourCapitalChangeHandler" class="com.pandadai.finance.handler.InpourCapitalChangeHandler">
+		<property name="inpourCapitalChangeDaoImpl" ref="inpourCapitalChangeDaoImpl" />
+	</bean>
+	
+<!-- 	************************************************************************************************** -->
+	
+	<!--	投资总览 -->
+	<bean id="investHomeImpl" class="com.pandadai.finance.dao.impl.InvestHomeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlHome">
+			<value>
+				select bi.id, bi.borrow_name, bi.borrow_money, bi.borrow_interest, 
+					bi.borrow_interest_rate, bi.reward_num, bi.borrow_duration, FROM_UNIXTIME(bi.deadline) deadline
+				from lzh_borrow_info bi
+					where 2=2 
+						and 1=1
+				ORDER BY bi.add_time desc;
+			</value>
+		</property>
+		<property name="sqlHomeDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(bi.add_time)" />
+
+	<!-- 单个投标明细 -->
+		<property name="sqlDetail">
+			<value>
+				select m.user_name, FROM_UNIXTIME(biv.add_time) invest_time, biv.investor_capital, bi.borrow_name, 
+					bi.borrow_duration, bi.borrow_interest_rate, biv.investor_interest
+				from lzh_borrow_investor biv, lzh_members m, lzh_borrow_info bi
+					where m.id = biv.investor_uid and biv.borrow_id = bi.id
+						and 1=1
+				order by biv.add_time desc;
+			</value>
+		</property>
+	<!-- 单个投标明细汇总导出 -->
+		<property name="sqlDetailExport">
+			<value>
+				select m.user_name, mi.real_name, biv.investor_capital, bi.borrow_name, sum(biv.investor_interest) + sum(biv.reward_money) summy, bi.borrow_interest_rate
+				from lzh_borrow_investor biv, lzh_members m, lzh_borrow_info bi, lzh_member_info mi
+					where m.id = biv.investor_uid and biv.borrow_id = bi.id and m.id = mi.uid
+						and 1=1
+				GROUP BY mi.real_name
+				order by biv.add_time desc;
+			</value>
+		</property>
+		
+		<property name="sqlSumInterset">
+			<value>
+				select part1.*, 
+				sum(CASE id.sort_order WHEN 1 THEN id.interest ELSE 0 END ) month1,
+				sum(CASE id.sort_order WHEN 2 THEN id.interest ELSE 0 END ) month2,
+				sum(CASE id.sort_order WHEN 3 THEN id.interest ELSE 0 END ) month3,
+				sum(CASE id.sort_order WHEN 4 THEN id.interest ELSE 0 END ) month4,
+				sum(CASE id.sort_order WHEN 5 THEN id.interest ELSE 0 END ) month5,	
+				sum(CASE id.sort_order WHEN 6 THEN id.interest ELSE 0 END ) month6 
+				from (
+					select m.id mid, m.user_name, bi.id bid, bi.borrow_interest_rate, bi.borrow_duration
+						, sum(biv.investor_capital) sum_invest, sum(biv.reward_money) sum_reward, sum(biv.investor_interest) sum_interest
+					from lzh_borrow_investor biv, lzh_members m, lzh_borrow_info bi
+						where biv.investor_uid = m.id and biv.borrow_id = bi.id
+<!-- 							and biv.borrow_id = 176 -->
+							and 1=1
+					GROUP BY m.id
+				) part1, lzh_investor_detail id
+					where id.borrow_id = part1.bid
+						and id.investor_uid = part1.mid
+				group by id.investor_uid
+			</value>
+		</property>
+	</bean>
+	<bean id="investHomeHandler" class="com.pandadai.finance.handler.InvestHomeHandler">
+		<property name="investHomeImpl" ref="investHomeImpl" />
+	</bean>
+	
+	<!--	客户信息 -->
+	<bean id="investCustomerImpl" class="com.pandadai.finance.dao.impl.InvestCustomerDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlCustomer">
+			<value>
+				select b.*, sum(mp.money) sum_inpour from (
+					select a.*, sum(mml.affect_money) sum_recommend_reward from (
+						select m.id, m.user_name, aus.id aid, aus.user_name auser_name, (mm.account_money + mm.back_money) account_money,
+							sum(biv.investor_capital) sum_invest, sum(biv.investor_interest) sum_interest, sum(biv.invest_fee) sum_fee
+						from lzh_members m LEFT JOIN lzh_ausers aus on aus.id = m.customer_id
+							LEFT JOIN lzh_member_money mm on m.id = mm.uid
+							LEFT JOIN lzh_borrow_investor biv on m.id = biv.investor_uid
+							LEFT JOIN lzh_member_info mmi on m.id = mmi.uid
+							LEFT JOIN lzh_members m2 on m.recommend_id = m2.id
+							where 2=2
+								and 1=1
+						GROUP BY m.id
+					) a LEFT JOIN lzh_member_moneylog mml
+						on a.id = mml.uid and mml.type = 13
+					GROUP BY a.id
+				) b LEFT JOIN lzh_member_payonline mp on b.id = mp.uid and mp.status = 1
+				GROUP BY b.id
+				order by b.id
+			</value>
+		</property>
+		<!-- （默认查询最近一个月数据） -->
+		<property name="sqlCustomerDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(m.reg_time)" />
+
+		<!-- 客户个人信息 -->
+		<property name="sqlCustomerInfo">
+			<value>
+				select a.*, sum(investor_capital) sum_invest from (
+					select m.id, m.user_name, mi.real_name, (mm.account_money + mm.back_money) account_money, mi.idcard, 
+						mb.bank_num, mb.bank_name, mb.bank_address, m2.id recommend_id, m2.user_name recommend_name
+					from lzh_members m LEFT JOIN lzh_member_info mi on m.id = mi.uid
+						LEFT JOIN lzh_member_money mm on m.id = mm.uid
+						LEFT JOIN lzh_member_banks mb on m.id = mb.uid
+						LEFT JOIN lzh_members m2 on m.recommend_id = m2.id
+						where 2=2
+							and 1=1
+<!-- 							and m.id = 623 -->
+					ORDER BY m.id
+				) a LEFT JOIN lzh_borrow_investor bi on a.id = bi.investor_uid
+				GROUP BY a.id;
+			</value>
+		</property>
+		<!-- 查询用户当前待收的投标信息 -->
+		<property name="sqlCustomerUncollecteDetail">
+			<value>
+				select mm.id, mm.user_name, bif.id borrow_id, bif.borrow_name, bif.borrow_money, bif.borrow_duration, biv.investor_capital, FROM_UNIXTIME(biv.add_time) invest_time
+				from lzh_members mm, lzh_borrow_info bif, lzh_borrow_investor biv
+					where bif.id = biv.borrow_id
+						and mm.id = biv.investor_uid
+						and bif.borrow_status in (6, 8, 10)
+						and bif.borrow_type in (1, 5)
+						and 1=1
+<!-- 						and mm.id = 44 -->
+			</value>
+		</property>
+		<!-- 查询用户当前总待收 -->
+		<property name="sqlCustomerUncollected">
+			<value>
+				select mm.id, mm.user_name, sum(biv.investor_capital) sum
+				from lzh_members mm, lzh_borrow_info bif, lzh_borrow_investor biv
+					where bif.id = biv.borrow_id
+						and mm.id = biv.investor_uid
+						and bif.borrow_status in (6, 8, 10)
+						and bif.borrow_type in (1, 5)
+						and 1=1
+<!-- 						and mm.id = 44 -->
+			</value>
+		</property>
+		<!-- 查询用户已邀请的好友 -->
+		<property name="sqlCustomerInvited">
+			<value>
+				select mm.id, mm.user_name, mm2.id invited_id, mm2.user_name invited_name
+				from lzh_members mm LEFT JOIN lzh_members mm2 on mm.id = mm2.recommend_id
+					where 2=2 
+						and 1=1
+<!-- 						and mm.id = 44 -->
+			</value>
+		</property>
+		
+		<!-- 客户充值记录信息 -->
+		<property name="sqlCustomerInpour">
+			<value>
+				select FROM_UNIXTIME(mp.add_time) inpour_time, mp.money, mp.way 
+				from lzh_member_payonline mp
+					where mp.status = 1
+						and 1=1;
+<!-- 						and mp.uid = 623; -->
+			</value>
+		</property>
+		
+		<!-- 客户投标记录信息 -->
+		<property name="sqlCustomerInvest">
+			<value>
+				select bi.id, bi.borrow_name, bi.borrow_duration, biv.investor_capital, FROM_UNIXTIME(biv.add_time) invest_time
+				from lzh_borrow_investor biv, lzh_borrow_info bi
+					where biv.borrow_id = bi.id
+						and 1=1;
+<!-- 						and biv.investor_uid = 623 ; -->
+			</value>
+		</property>
+		
+		<!-- 客户利息记录信息 -->
+		<property name="sqlCustomerInterest">
+			<value>
+				select bi.id, bi.borrow_duration, bi.borrow_name, id.total, id.sort_order, FROM_UNIXTIME(id.deadline) interest_time, id.interest
+				from lzh_investor_detail id, lzh_borrow_info bi
+					where id.borrow_id = bi.id
+						and 1=1
+<!-- 						and id.investor_uid = 623 -->
+				order by id.id;
+			</value>
+		</property>
+		
+		<!-- 客户回款记录信息 -->
+		<property name="sqlCustomerBackCapital">
+			<value>
+				select bi.id, bi.borrow_duration, bi.borrow_name, FROM_UNIXTIME(id.deadline) back_time, id.capital
+				from lzh_investor_detail id, lzh_borrow_info bi
+					where id.borrow_id = bi.id and id.capital > 0
+						and 1=1
+<!-- 						and id.investor_uid = 623 -->
+				order by id.id;
+			</value>
+		</property>
+	</bean>
+	<bean id="investCustomerHandler" class="com.pandadai.finance.handler.InvestCustomerHandler">
+		<property name="investCustomerImpl" ref="investCustomerImpl" />
+	</bean>
+	
+	<!-- 	管理员信息 -->
+	<bean id="investAdminUserImpl" class="com.pandadai.finance.dao.impl.InvestAdminUserDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlAdminUser">
+			<value>
+				select aus.id, aus.user_name, aus.real_name, aus.is_kf, aus.is_ban, (sum(m.sum_invest) * 0.001) sum_reward
+				from lzh_ausers aus LEFT JOIN (
+					select m.id, m.customer_id, sum(biv.investor_capital) sum_invest
+					from lzh_members m LEFT JOIN lzh_borrow_investor biv on m.id = biv.investor_uid
+					where 2=2
+						and 1=1
+					GROUP BY m.id
+				) m on aus.id = m.customer_id
+				group by aus.id
+			</value>
+		</property>
+		<!-- （默认查询最近一个月数据） -->
+<!-- 		<property name="sqlAdminUserDefaultDuring" value="and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= FROM_UNIXTIME(biv.add_time)" /> -->
+		<property name="sqlAdminUserDefaultDuring" value="and if(DATE_FORMAT(curdate(), '%d') &lt; '16'
+				, FROM_UNIXTIME(biv.add_time) &lt;= CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m'), '-15') and FROM_UNIXTIME(biv.add_time) > CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m'), '-15')
+				, FROM_UNIXTIME(biv.add_time) &lt;= CONCAT(DATE_FORMAT(CURDATE(), '%Y-%m'), '-15') and FROM_UNIXTIME(biv.add_time) > CONCAT(DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m'), '-15'))" />
+	</bean>
+	<bean id="investAdminUserHandler" class="com.pandadai.finance.handler.InvestAdminUserHandler">
+		<property name="investAdminUserImpl" ref="investAdminUserImpl" />
+	</bean>
+	
+	<!-- 	借款人管理 -->
+	<bean id="investBorroworImpl" class="com.pandadai.finance.dao.impl.InvestBorroworDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlBorrowor">
+			<value>
+				select m.id, m.user_name, sum(bi.borrow_money) sum_borrow, sum(bi.reward_money) sum_reward, sum(bi.borrow_interest) sum_interest, sum(bi.borrow_fee) sum_fee
+				from lzh_borrow_info bi, lzh_members m
+					where m.id = bi.borrow_uid
+						and borrow_status in (6, 8, 10)
+				GROUP BY m.id
+				ORDER BY bi.add_time DESC;
+			</value>
+		</property>
+		
+		<property name="sqlBorroworDetail">
+			<value>
+				select m.id, m.user_name, bi.id bid, bi.borrow_name, bi.borrow_duration, FROM_UNIXTIME(bi.add_time) borrow_time, bi.borrow_interest, bi.borrow_fee, max(FROM_UNIXTIME(id.deadline)) recently_time
+				from lzh_members m, lzh_borrow_info bi, lzh_investor_detail id
+					where m.id = bi.borrow_uid and bi.id = id.borrow_id
+<!-- 						and FROM_UNIXTIME(id.deadline) >= CURDATE() -->
+						and bi.borrow_status in (6, 8, 10)
+						and 1=1
+<!-- 						and m.id = 691 -->
+				GROUP BY bi.id
+				ORDER BY bi.add_time desc;
+			</value>
+		</property>
+	</bean>
+	<bean id="investBorroworHandler" class="com.pandadai.finance.handler.InvestBorroworHandler">
+		<property name="investBorroworImpl" ref="investBorroworImpl" />
+	</bean>
+	
+	<!-- 	利息日历提醒 -->
+	<bean id="investRemindImpl" class="com.pandadai.finance.dao.impl.InvestRemindDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlRemind">
+			<value>
+				select DATE_FORMAT(FROM_UNIXTIME(id.deadline),'%Y-%m-%d') remind_time, sum(id.interest) sum_interest, sum(id.capital) sum_capital
+				from lzh_investor_detail id, lzh_borrow_info bif
+				 	where id.borrow_id = bif.id
+						and bif.borrow_type &lt;&gt; 3
+						and 1=1
+				GROUP BY DATE_FORMAT(FROM_UNIXTIME(id.deadline),'%Y-%m-%d');
+			</value>
+		</property>
+		<!-- （默认查询当月数据） -->
+		<property name="sqlRemindDefaultDuring" value="and DATE_FORMAT(FROM_UNIXTIME(id.deadline),'%Y-%m') = DATE_FORMAT(curdate(),'%Y-%m')" />
+
+		<!-- 某日内本金回款 -->
+		<property name="sqlRemindCapital">
+			<value>
+				select bif.id, bif.borrow_name, bif.borrow_uid, mm.user_name, bif.borrow_money, bif.borrow_interest, bif.borrow_interest_rate, bif.borrow_duration, sum(idt.capital) sum_receive_capital
+				from lzh_investor_detail idt, lzh_borrow_info bif, lzh_members mm
+					where bif.id = idt.borrow_id
+						and bif.borrow_uid = mm.id
+						and bif.borrow_type &lt;&gt; 3
+						and 1=1
+<!-- 						and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m-%d') = '2014-12-29' -->
+						and idt.sort_order = idt.total
+				GROUP BY bif.id
+			</value>
+		</property>
+		
+		<!-- 某日内利息回款 -->
+		<property name="sqlRemindInterest">
+			<value>
+				select bif.id, bif.borrow_name, bif.borrow_uid, mm.user_name, bif.borrow_money, bif.borrow_interest, bif.borrow_interest_rate, bif.borrow_duration, sum(idt.interest) sum_receive_interest
+				from lzh_investor_detail idt, lzh_borrow_info bif, lzh_members mm
+					where bif.id = idt.borrow_id
+						and bif.borrow_uid = mm.id
+						and bif.borrow_type &lt;&gt; 3
+						and 1=1
+<!-- 						and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m-%d') = '2014-12-29' -->
+				GROUP BY bif.id
+			</value>
+		</property>
+		
+		<!-- 某日内本金回款明细 -->
+		<property name="sqlRemindCapitalDetail">
+			<value>
+				select mm.id, mm.user_name, FROM_UNIXTIME(idt.deadline) deadline, idt.capital
+				from lzh_members mm, lzh_investor_detail idt
+					where mm.id = idt.investor_uid
+						and idt.sort_order = idt.total
+<!-- 						and idt.borrow_id = 184 -->
+<!-- 						and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m-%d') = '2014-12-29' -->
+						and 1=1
+			</value>
+		</property>
+		
+		<!-- 某日内利息回款明细 -->
+		<property name="sqlRemindInterestDetail">
+			<value>
+				select mm.id, mm.user_name, FROM_UNIXTIME(idt.deadline) deadline, idt.interest, idt.sort_order, idt.total
+				from lzh_members mm, lzh_investor_detail idt
+					where mm.id = idt.investor_uid
+<!-- 						and idt.borrow_id = 184 -->
+<!-- 						and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m-%d') = '2014-12-29' -->
+						and 1=1
+			</value>
+		</property>
+		
+		<!-- 某日内回款明细中客户个人信息 -->
+		<property name="sqlRemindDetailCustomerInfo">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, mm.user_phone, mm.user_email, mmi.idcard, FROM_UNIXTIME(mm.reg_time) reg_time, mmy.account_money + mmy.back_money usable_money, mmy.money_collect
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					LEFT JOIN lzh_member_money mmy ON mm.id = mmy.uid
+					where 2=2
+<!-- 						and mm.id = 44 -->
+						and 1=1;
+			</value>
+		</property>
+		
+	</bean>
+	<bean id="investRemindHandler" class="com.pandadai.finance.handler.InvestRemindHandler">
+		<property name="investRemindImpl" ref="investRemindImpl" />
+	</bean>
+
+	<!-- 各种排行榜 -->
+	<bean id="topHomeDaoImpl" class="com.pandadai.finance.dao.impl.TopHomeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 用户总待收排行 -->
+		<property name="sqlUncollected">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, mmy.money_collect
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					LEFT JOIN lzh_member_money mmy on mm.id = mmy.uid
+				order by mmy.money_collect desc
+				<!--  limit 10 -->
+			</value>
+		</property>
+		
+		<!-- 用户累积投资排行 -->
+		<property name="sqlInvested">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, sum(biv.investor_capital) sum_invest
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					, lzh_borrow_investor biv
+					where mm.id = biv.investor_uid
+				GROUP BY mm.id
+				order by sum_invest desc
+				<!--  limit 10 -->
+			</value>
+		</property>
+		
+		<!-- 用户累积充值排行 -->
+		<property name="sqlInpour">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, sum(mp.money) sum_money
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					, lzh_member_payonline mp
+					where mm.id = mp.uid
+						and mp.status = 1
+				GROUP BY mm.id
+				order by sum_money desc
+				<!--  limit 10 -->
+			</value>
+		</property>
+		
+		<!-- 用户累积提现排行 -->
+		<property name="sqlWithdraw">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, sum(mw.success_money) sum_money
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					, lzh_member_withdraw mw
+					where mm.id = mw.uid		
+						and (mw.withdraw_status = 1 or mw.withdraw_status = 2)
+				GROUP BY mm.id
+				order by sum_money desc
+				<!--  limit 10 -->
+			</value>
+		</property>
+		
+		<!-- 用户累积借款排行 -->
+		<property name="sqlBorrow">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, sum(bif.borrow_money) sum_money
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+					, lzh_borrow_info bif
+					where bif.borrow_uid = mm.id
+						and bif.borrow_type in (1, 2, 4, 5)
+						and bif.borrow_status in (6, 7, 8, 9, 10)
+				GROUP BY mm.id
+				order by sum_money desc
+<!-- 				limit 10 -->
+			</value>
+		</property>
+		
+		<!-- 用户可用（投资）积分排行 -->
+		<property name="sqlIntegral">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, mm.active_integral
+				from lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid
+				ORDER BY active_integral desc
+<!-- 				limit 10 -->
+			</value>
+		</property>
+		
+	</bean>
+	<bean id="topHomeHandler" class="com.pandadai.finance.handler.TopHomeHandler">
+		<property name="topHomeDaoImpl" ref="topHomeDaoImpl" />
+	</bean>
+	
+	<!-- 月运营数据 -->
+	<bean id="reportHomeDaoImpl" class="com.pandadai.finance.dao.impl.ReportHomeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		
+		<!-- 投资人数 -->
+		<property name="sqlNumbers">
+			<value>
+				SELECT DATE_FORMAT(FROM_UNIXTIME(bif.second_verify_time),'%Y-%m') month, count(biv.investor_uid) numbers
+				FROM lzh_borrow_info bif LEFT JOIN lzh_borrow_investor biv on bif.id = biv.borrow_id
+				 where bif.borrow_status in (6, 7, 8, 10)
+				  and bif.borrow_type in (1, 5)
+				   and DATE_FORMAT(FROM_UNIXTIME(bif.second_verify_time),'%Y-%m') = 
+			</value>
+		</property>
+		<property name="sqlNumbersDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+		
+		<!-- 总成交量 -->
+		<property name="sqlVolume">
+			<value>
+				SELECT DATE_FORMAT(FROM_UNIXTIME(bif.second_verify_time),'%Y-%m') month, sum(bif.borrow_money) volume
+				FROM lzh_borrow_info bif
+				 where bif.borrow_status in (6, 7, 8, 10)
+				  and bif.borrow_type in (1, 5)
+				   and DATE_FORMAT(FROM_UNIXTIME(bif.second_verify_time),'%Y-%m') = 
+			</value>
+		</property>
+		<property name="sqlVolumeDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+		
+		<!-- 回款 -->
+		<property name="sqlBack">
+			<value>
+				select DATE_FORMAT(FROM_UNIXTIME(idt.deadline), '%Y-%m') month, sum(idt.capital) capital, sum(idt.interest) interest, sum(idt.interest_fee) fee
+				from lzh_borrow_info bif, lzh_investor_detail idt
+				 where bif.id = idt.borrow_id
+				  and bif.borrow_status in (6, 7, 8, 10)
+				  and bif.borrow_type in (1, 5)
+				  and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m') = 
+			</value>
+		</property>
+		<property name="sqlBackDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+		
+		<!-- 待收 -->
+		<property name="sqlUncollectedSite">
+			<value>
+				select DATE_FORMAT(FROM_UNIXTIME(idt.deadline), '%Y-%m') month, sum(idt.capital) capital, sum(idt.interest) interest, sum(idt.interest_fee) fee
+				from lzh_borrow_info bif, lzh_investor_detail idt
+				 where bif.id = idt.borrow_id
+				  and bif.borrow_status in (6, 7, 8, 10)
+				  and bif.borrow_type in (1, 5)
+				  and DATE_FORMAT(FROM_UNIXTIME(bif.add_time),'%Y-%m') &lt; ###
+  				  and DATE_FORMAT(FROM_UNIXTIME(idt.deadline),'%Y-%m') >= $$$
+			</value>
+		</property>
+		<property name="sqlUncollectedTmp" value="###" />
+		<property name="sqlUncollectedTmp2" value="$$$" />
+		<property name="sqlUncollectedDefaultMonth" value=" DATE_FORMAT(CURDATE(),'%Y-%m') " />
+		<property name="sqlUncollectedDefaultMonth2" value=" DATE_FORMAT(CURDATE(),'%Y-%m') " />
+		
+		<!-- 注册人数 -->
+		<property name="sqlRegisterNew">
+			<value>
+				select count(1) num from lzh_members mm
+					where DATE_FORMAT(FROM_UNIXTIME(mm.reg_time),'%Y-%m') = 
+			</value>
+		</property>
+		<property name="sqlRegisterNewDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+		
+		<!-- 已注册人数 -->
+		<property name="sqlRegisterSum">
+			<value>
+				select count(1) num from lzh_members
+			</value>
+		</property>
+		
+	</bean>
+	<bean id="reportHomeHandler" class="com.pandadai.finance.handler.ReportHomeHandler">
+		<property name="reportHomeDaoImpl" ref="reportHomeDaoImpl" />
+	</bean>
+	
+	<!-- 月发标详情 -->
+	<bean id="reportBorrowDaoImpl" class="com.pandadai.finance.dao.impl.ReportBorrowDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 普通标详情 -->
+		<property name="sqlBorrow">
+			<value>
+				select bif.id, bif.borrow_name, FROM_UNIXTIME(add_time) time, bif.borrow_money, bif.borrow_duration, bif.borrow_interest_rate, bif.reward_num, bif.borrow_interest, bif.borrow_fee, bif.borrow_interest * 0.1 fee
+				from lzh_borrow_info bif
+				 where bif.borrow_status in (6, 7, 8, 10)
+				  and bif.borrow_type in (1, 5)
+				  and DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m') = 
+<!-- 				ORDER BY add_time desc -->
+			</value>
+		</property>
+		<property name="sqlBorrowDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+		<!-- 平台指定收入利率 3% -->
+		<property name="sqlBorrowConstant" value="0.03" />
+		
+		<!-- 秒（还）标详情 -->
+		<property name="sqlSecond">
+			<value>
+				select bif.id, bif.borrow_name, FROM_UNIXTIME(add_time) time, bif.borrow_money, bif.borrow_interest_rate, bif.borrow_interest, bif.borrow_interest * 0.1 fee, (bif.borrow_interest - bif.borrow_interest * 0.1) final_money
+				from lzh_borrow_info bif
+				 where bif.borrow_status in (6, 7, 8, 10)
+					and bif.borrow_type = 3
+					and DATE_FORMAT(FROM_UNIXTIME(add_time),'%Y-%m') = 
+			</value>
+		</property>
+		<property name="sqlSecondDefaultMonth" value=" DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%Y-%m') " />
+	</bean>
+	<bean id="reportBorrowHandler" class="com.pandadai.finance.handler.ReportBorrowHandler">
+		<property name="reportBorrowDaoImpl" ref="reportBorrowDaoImpl" />
+	</bean>
+	
+	<!-- 发标归档相关 -->
+	<bean id="reportFilingDaoImpl" class="com.pandadai.finance.dao.impl.ReportFilingDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<property name="sqlBorrowListById">
+			<value>
+				select bif.id, mm.user_name, bif.borrow_name, bif.borrow_money, bif.borrow_duration, FROM_UNIXTIME(bif.add_time) time, bif.borrow_interest_rate, bif.reward_num
+				from lzh_borrow_info bif, lzh_members mm
+					where bif.borrow_uid = mm.id
+						and bif.id = 
+			</value>
+		</property>
+		
+		<property name="sqlBorrowListByCondition">
+			<value>
+				select bif.id, mm.user_name, bif.borrow_name, bif.borrow_money, bif.borrow_duration, FROM_UNIXTIME(bif.add_time) time, bif.borrow_interest_rate, bif.reward_num
+				from lzh_borrow_info bif, lzh_members mm
+					where bif.borrow_uid = mm.id
+						and 1=1
+			</value>
+		</property>
+		<property name="sqlBorrowListByConditionDefaultDuring" value=" and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(add_time) " />
+		
+		<property name="sqlReportFiling">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, mmi.idcard, sum(biv.investor_capital) capital, sum(biv.investor_interest) interest, mm.user_phone, mmb.bank_name, mmb.bank_num 
+				from lzh_borrow_info bif, lzh_borrow_investor biv 
+					, lzh_members mm LEFT JOIN lzh_member_info mmi on mm.id = mmi.uid 
+					LEFT JOIN lzh_member_banks mmb on mm.id = mmb.uid 
+					where bif.id = biv.borrow_id 
+						and biv.investor_uid = mm.id 
+<!-- 						and bif.id = 176 -->
+						and 1=1
+				GROUP BY mm.id
+			</value>
+		</property>
+	</bean>
+	<bean id="reportFilingHandler" class="com.pandadai.finance.handler.ReportFilingHandler">
+		<property name="reportFilingDaoImpl" ref="reportFilingDaoImpl" />
+	</bean>
+</beans>

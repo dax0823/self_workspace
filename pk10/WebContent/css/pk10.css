@@ -1,0 +1,81 @@
+table {
+	border: solid #add9c0;
+	border-width: 1px 0px 0px 1px;
+}
+
+td {
+	border: solid #add9c0;
+	border-width: 0px 1px 1px 0px;
+	padding: 5px 0;
+}
+
+#configTable td { text-align: center; padding: 0px 5px; }
+
+#contentDiv { display: none; }
+
+/* #backConfigDiv { display: none; } */
+
+/* #selfInfoDiv { display: none; } */
+
+/* #recordDivRule1 { display: none; } */
+
+/* #recordDivRule2 { display: none; } */
+
+/* #recordDivRule3 { display: none; } */
+
+.ruleDivClass { display: none; }
+
+.time { color : #6f8a97; }
+
+/* #recordTable1 tr.trBGColor { background-color: #dbf4f0; } */
+tr.trBGColor { background-color: #c1eaff; }
+
+td { text-align: center; padding: 5px 5px; }
+
+.histroy { background-color: #CCCCCC; }
+
+.big { font-weight: bold; color: red;}
+
+.small { font-weight: bold; color: green;}
+
+.numberBGColor { display: inline-block; background-color: #FFFFCC; width: 30px;}
+
+.winBGColor { display: inline-block; background-color: green; font-weight: bold; width: 30px;}
+
+.luckyBGColor { display: inline-block; background-color: purple; font-weight: bold; width: 30px;}
+
+.errorBGColor { display: inline-block; background-color: red; font-weight: bold; width: 30px;}
+
+.mainCarBGColor { display: inline-block; background-color: #8fceef; width: 30px;}
+
+.configWinBGColor { background-color: #fbc4f2;}
+
+.configAllWinBGColor { background-color: #8080ff;}
+
+.backShow { color: #990033; font-weight: bold; }
+
+#income { color: #cc3333; font-weight: bold; }
+
+.incomeLucky { color: #ff8040; font-weight: bold; }
+
+.incomeError { color: #84d827; font-weight: bold; }
+
+.sum {  width: 110px; background-color: #CCCC33; }
+
+.isNewest { color: #d24d6f; }
+
+#backNum { color: #fc035a; }
+
+.backDiv { display: none; }
+
+/* .configRulesAllDiv { width: 1000px; } */
+.pConfigRules { display: inline-table; }
+.pHeadTailConfigRules { display: inline-table; }
+.pChampionConfigRules { display: inline-table; }
+
+#countPerDayTable { display: none; }
+
+
+.compareNumberBGColor { display: inline-block; background-color: #FFFFCC; width: 30px;}
+
+.mainNumberBGColor { display: inline-block; background-color: #e8f88f; width: 30px;}

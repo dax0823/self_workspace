@@ -1,0 +1,50 @@
+<div id="finReportFilingDiv">
+	<table class="condition">
+		<tr>
+			<td>&nbsp;<input	type="radio" name="bList" class="bId" />&nbsp;</td>
+			<td>&nbsp;按发标id查询&nbsp;&nbsp;</td>
+			<td>投标id：<input	type="text" class="borrowId" value="" /></td>
+		</tr>
+		<tr>
+			<td>&nbsp;<input	type="radio" name="bList" class="others"  checked="checked" />&nbsp;</td>
+			<td>&nbsp;按其他条件查询&nbsp;&nbsp;</td>
+			<td>
+				借款人用户名（模糊匹配）：<input	type="text" class="userName" value="" /><br />
+				发标名称（模糊匹配）：<input	type="text" class="borrowName" value="" /><br />
+				发标时间：<input type="text" class="duringDate" /><input type="button" class="btn clear" value="清空" />（默认查询最近7天内的数据） 
+			</td>
+		</tr>
+	</table>
+	<input type="button" id="finReportFilingQueryBtn" class="btn" value="查询" /><br />
+	<hr>
+	<table id="finReportBorrowListTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<br />
+	<hr>
+	<table id="finReportBorrowInfoTable">
+		<tr>
+			<td colspan="3">标名：<span class="tdBorrowName"></span></td>
+		</tr>
+		<tr>
+			<td>发标金额：<span class="tdMoney"></span>元</td>
+			<td>年利率：<span class="tdInterestRate"></span>%</td>
+			<td>奖励利率：<span class="tdRewardRate"></span>%</td>
+		</tr>
+		<tr>
+			<td colspan="3">发标时间：<span class="tdTime"></span></td>
+		</tr>
+		<tr><td colspan="3"><a id="finReportFilingExportBtn" class="fileExport">投资人相关信息导出</a></td></tr>
+	</table>
+	<br/>
+	<table id="finReportFilingTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<br/>
+</div>

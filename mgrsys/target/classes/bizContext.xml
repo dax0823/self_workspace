@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<bean id="bizHomeImpl" class="com.pandadai.biz.dao.impl.BizHomeDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 平台已借出款总额 -->
+		<property name="sqlSumBorrowMoney">
+			<value>
+				select sum(bi.borrow_money) sum_borrow_money FROM lzh_borrow_info bi
+					where bi.borrow_status in (6, 7) and bi.borrow_type &lt;&gt; 3;
+			</value>
+		</property>
+		<!-- 总充值金额 -->
+		<property name="sqlSumInpourMoney">
+			<value>
+				select sum(mp.money) sum_inpour_money from lzh_member_payonline mp
+					where mp.status = 1
+			</value>
+		</property>
+		<!-- 总冻结金额 -->
+		<property name="sqlSumFreezeMoney">
+			<value>
+				select sum(mm.money_freeze) sum_freeze_money from lzh_member_money mm;
+			</value>
+		</property>
+		<!-- 总提现金额 -->
+		<property name="sqlSumWithdrawMoney">
+			<value>
+				select sum(mw.withdraw_money) sum_withdraw_money from lzh_member_withdraw mw
+					where mw.withdraw_status = 2;
+			</value>
+		</property>
+		<!-- 自动投标人数 -->
+		<property name="sqlAutoInfo">
+			<value>
+				select count(1) auto_num, sum(mm.account_money + mm.back_money) sum_auto_money
+				from lzh_auto_borrow ab, lzh_members m LEFT JOIN lzh_member_money mm on m.id = mm.uid
+					where m.id = ab.uid
+						and unix_timestamp(NOW()) &lt;= ab.end_time
+						and ab.borrow_type = 1
+						and ab.is_use = 1
+						and mm.account_money >= ab.account_money
+			</value>
+		</property>
+		<!-- 自动投标人数 -->
+<!-- 		<property name="sqlAutoNum"> -->
+<!-- 			<value> -->
+<!-- 				select count(1) auto_num from ( -->
+<!-- 					select ab.uid from lzh_auto_borrow ab -->
+<!-- 					GROUP BY ab.uid -->
+<!-- 				) a -->
+<!-- 			</value> -->
+<!-- 		</property> -->
+		<!-- 自动投标总金额 -->
+<!-- 		<property name="sqlAutoMoney"> -->
+<!-- 			<value> -->
+<!-- 				select sum(bi.investor_capital) sum_auto_money from lzh_borrow_investor bi -->
+<!--  					where bi.is_auto = 1; -->
+<!-- 			</value> -->
+<!-- 		</property> -->
+		<!-- 当天充值总金额 -->
+		<property name="sqlSumInpourMoneyCurr">
+			<value>
+				select sum(mp.money) sum_inpour_money from lzh_member_payonline mp
+					where mp.status = 1
+						and 1=1
+			</value>
+		</property>
+		<!-- 默认搜索当天充值总额 -->
+		<property name="sqlSumInpourMoneyCurrDefaultCondition" value="and FROM_UNIXTIME(mp.add_time) = CURDATE()" />
+		<!-- 当天提现总金额 -->
+		<property name="sqlSumWithdrawMoneyCurr">
+			<value>
+				select sum(mw.withdraw_money) sum_withdraw_money from lzh_member_withdraw mw
+					where mw.withdraw_status = 2
+						and 1=1
+			</value>
+		</property>
+		<!-- 默认搜索当天提现总额 -->
+		<property name="sqlSumWithdrawMoneyCurrDefaultCondition" value="and FROM_UNIXTIME(mw.add_time) = CURDATE()" />
+		<!-- 自动投标排队详情 -->
+		<property name="sqlAutoDetail">
+			<value>
+<!-- 				select ab.id, ab.is_use, m.user_name, mi.real_name, mm.account_money + mm.back_money usable_money, mm.money_collect, mm.money_freeze -->
+<!-- 					, m2.user_name recommend_user, m.customer_name, FROM_UNIXTIME(m.reg_time) reg_time -->
+<!-- 				from lzh_auto_borrow ab, lzh_members m left join lzh_member_info mi on m.id = mi.uid -->
+<!-- 					LEFT JOIN lzh_member_money mm on m.id = mm.uid -->
+<!-- 					LEFT JOIN lzh_members m2 on m.recommend_id = m2.id -->
+<!-- 					where m.id = ab.uid  -->
+<!-- 				GROUP BY ab.uid -->
+<!-- 				ORDER BY ab.id -->
+					select ab.id, m.user_name, mi.real_name, mm.account_money + mm.back_money usable_money, mm.money_collect, mm.money_freeze
+						, m2.user_name recommend_user, m.customer_name, FROM_UNIXTIME(m.reg_time) reg_time
+					from lzh_auto_borrow ab, lzh_members m LEFT JOIN lzh_member_money mm on m.id = mm.uid
+						LEFT JOIN lzh_member_info mi on m.id = mi.uid
+						LEFT JOIN lzh_members m2 on m.recommend_id = m2.id
+						where m.id = ab.uid
+							and unix_timestamp(NOW()) &lt;= ab.end_time
+							and ab.borrow_type = 1
+							and ab.is_use = 1
+							and mm.account_money >= ab.account_money
+					order by ab.invest_time
+			</value>
+		</property>
+		
+		<!-- 充值明细 -->
+		<property name="sqlInpourMoneyDetail">
+			<value>
+				select m.id, m.user_name, FROM_UNIXTIME(mp.add_time) inpour_time, mp.money 
+				from lzh_member_payonline mp, lzh_members m
+					where mp.status = 1 and m.id = mp.uid
+						and 1=1;
+<!-- 						and FROM_UNIXTIME(mp.add_time) = CURDATE(); -->
+			</value>
+		</property>
+		
+		<!-- 提现明细 -->
+		<property name="sqlWithdrawMoneyDetail">
+			<value>
+				select m.id, m.user_name, FROM_UNIXTIME(mw.add_time) withdraw_time, mw.withdraw_money 
+				from lzh_member_withdraw mw, lzh_members m
+					where mw.withdraw_status = 2 and m.id = mw.uid
+						and 1=1;
+<!-- 						and FROM_UNIXTIME(mw.add_time) = CURDATE(); -->
+			</value>
+		</property>
+
+		<!-- 用户个人基础信息 -->
+		<property name="sqlCustomerInfoBase">
+			<value>
+				select m.user_name, m.id, mi.real_name, mi.sex, m2.user_name recommend, m.customer_name, mi.idcard
+					, m.user_phone, m.user_email, mi.address
+				from lzh_members m LEFT JOIN lzh_member_info mi ON m.id = mi.uid
+					LEFT JOIN lzh_members m2 ON m.recommend_id = m2.id
+					where 2=2
+						 and 1=1 ;
+			</value>
+		</property>
+
+		<!-- 用户个人资金状况信息 -->
+		<property name="sqlCustomerInfoMoney">
+			<value>
+				select (mm.money_freeze + money_collect + account_money + back_money) account_sum
+					, money_collect, (account_money + back_money) usable_money, money_freeze
+				from lzh_member_money mm
+					where 2=2
+<!-- 						and mm.uid = 44 -->
+						and 1=1;
+			</value>
+		</property>
+		
+		<!-- 用户个人充值信息 -->
+		<property name="sqlCustomerInfoInpour">
+			<value>
+				select count(1) num, sum(money) inpour_sum from lzh_member_payonline mp
+					where mp.status = 1
+<!-- 						and mp.uid = 44 -->
+						and 1=1;
+			</value>
+		</property>
+		
+		<!-- 用户个人提现信息 -->
+		<property name="sqlCustomerInfoWithdraw">
+			<value>
+				select count(1) num, sum(withdraw_money) withdraw_sum from lzh_member_withdraw mw
+					WHERE mw.withdraw_status = 2
+<!-- 						and mw.uid = 54 -->
+						and 1=1;
+			</value>
+		</property>
+		
+		<!-- 用户个人投标信息记录 -->
+		<property name="sqlCustomerInfoInvest">
+			<value>
+				select bi.borrow_name, FROM_UNIXTIME(biv.add_time) invest_time, biv.investor_capital, FROM_UNIXTIME(bi.deadline) end_time
+				from lzh_borrow_info bi, lzh_borrow_investor biv
+					where bi.id = biv.borrow_id
+<!-- 						and biv.investor_uid = 44 -->
+						and 1=1
+				order by biv.add_time desc;
+			</value>
+		</property>
+		
+		<!-- 用户个人身份证所在文件夹的相对路径 -->
+		<property name="sqlCustomerInfoIDCard">
+			<value>
+				select mi.card_img from lzh_member_info mi
+					where 2=2 
+<!-- 						and mi.uid = 44 -->
+						and 1=1
+			</value>
+		</property>
+		
+		<!-- 用户个人资金变动记录 -->
+		<property name="sqlCustomerInfoMoneyLog">
+			<value>
+				select FROM_UNIXTIME(mml.add_time) log_time, mml.affect_money, mml.info from lzh_member_moneylog mml
+					where 2=2
+<!-- 						and mml.uid = 44 -->
+						and 1=1
+				order by mml.add_time desc
+			</value>
+		</property>
+	</bean>
+	<bean id="bizHomeHandler" class="com.pandadai.biz.handler.BizHomeHandler">
+		<property name="bizHomeImpl" ref="bizHomeImpl" />
+		<property name="idCardFolderPath" value="http://www.pandadai.com/" />
+	</bean>
+	
+	<bean id="bizLotteryLogImpl" class="com.pandadai.biz.dao.impl.BizLotteryLogDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 抽奖奖品记录 -->
+		<property name="sqlLotteryLog">
+			<value>
+				select mm.id, mm.user_name, mmi.real_name, case mm.user_phone when '' then '无' else mm.user_phone end user_phone
+					, ml.name, ml.info, FROM_UNIXTIME(ml.add_time) lottery_time
+				from lzh_market_log ml, lzh_members mm left JOIN lzh_member_info mmi on mm.id = mmi.uid
+					where ml.type = 2
+						and 1=1
+<!-- 						and '2014-11-27' <= FROM_UNIXTIME(ml.add_time) -->
+<!-- 				 		and '2014-12-03' >= FROM_UNIXTIME(ml.add_time)  -->
+						and ml.uid = mm.id
+				ORDER by ml.add_time DESC
+			</value>
+		</property>
+		<property name="sqlLotteryLogDefaultCondition" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(ml.add_time)" />
+	</bean>
+	<bean id="bizLotteryLogHandler" class="com.pandadai.biz.handler.BizLotteryLogHandler">
+		<property name="bizLotteryLogImpl" ref="bizLotteryLogImpl" />
+	</bean>
+</beans>

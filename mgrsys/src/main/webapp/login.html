@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>熊猫贷-后台统计工具</title>
+<meta http-equiv="description" content="pandadai">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="./css/index.css">
+<script type="text/javascript" src="./framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./js/utils/constants.js"></script>
+<script type="text/javascript" src="./js/utils/variable.js"></script>
+<script type="text/javascript" src="./js/utils/utils.js"></script>
+<script type="text/javascript" src="./js/login.js"></script>
+
+</head>
+<body>
+	<div id="loginDiv">
+		<div class="loginLogo">
+			<img src="./image/logo.gif" />
+		</div>
+		<div class="loginForm">
+			<table>
+				<tr>
+					<td>登录名称：</td>
+					<td><input type="text" class="username" /></td>
+				</tr>
+				<tr>
+					<td>密码：</td>
+					<td><input type="password"  class="pwd" /></td>
+				</tr>
+				<tr>
+					<td>登录口令：</td>
+					<td><input type="text" class="userword" /></td>
+				</tr>
+				<tr>
+					<td>验证码：</td>
+					<td><input type="text" class="captcha" /><img src="./gainCaptcha.do"  /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="button" value="确定" class="loginSubmit" />
+						<input type="button" value="重置" class="loginClear" />
+						<input type="button" value="test" class="loginTest" />
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

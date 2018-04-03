@@ -1,0 +1,77 @@
+<div id="finInpourHomeDiv">
+	<table id="finInpourHomeTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<hr>
+	<div id="finInpourHomeInpourDiv">
+		<div id="finInpourHomeInpourTab">
+			充值详细信息：<span ref="inpourCurrDate" class="on">今天</span> | <span ref="inpourLast7Day">最近7天</span> | <span ref="inpourLastMonth">一月内</span> <br/>
+		</div>
+		<div id="finInpourHomeInpourCurrDateDiv" class="div on">
+			<table id="finInpourHomeInpourCurrDateTable">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div id="finInpourHomeInpourLast7DayDiv" class="div">
+			<table id="finInpourHomeInpourLast7DayTable">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			</div>
+		<div id="finInpourHomeInpourLastMonthDiv" class="div">
+			<table id="finInpourHomeInpourLastMonthTable">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			</div>
+		<div class="pieChartsDiv"></div>
+	</div>
+</div>
+<br />
+<input type="button" id="showFinInpourHomeDetailBtn" class="btn" value="查看导出明细">
+<div id="finInpourHomeDetailDiv">
+	<hr>
+	<div id="finInpourHomeTab">
+		<span ref="everyDay" class="on">按天统计</span> | <span ref="everyMonth">按月统计</span> （默认查询最近一个月内数据）<br/>
+		时间范围：<input type="text" class="duringDate"  /><input type="button" class="btn clear" value="清空" /><br />
+		充值类型：<select>
+			<option value="all">所有</option>
+			<option value="baofoo">宝付</option>
+			<option value="easypay">易生支付</option>
+			<option value="off">线下</option>
+		</select> <br />
+		<input type="button" id="finInpourHomeDetailQueryBtn" class="btn" value="查询" />
+<!-- 		<input type="button" id="finInpourHomeDetailExportBtn" value="明细导出" /> -->
+		<a id="finInpourHomeDetailExportBtn" class="fileExport">明细文件导出</a>
+	</div>
+	<div id="finInpourHomeContentDiv">
+		<div id="finInpourHomeEveryDayDiv" class="div on">
+			<table id="finInpourHomeEveryDayTable">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div id="finInpourHomeEveryMonthDiv" class="div">
+			<table id="finInpourHomeEveryMonthTable">
+				<thead>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br/>
+</div>
+

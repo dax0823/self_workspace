@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>赛车pk10-辅助工具（对比-统计错误）</title>
+<meta http-equiv="description" content="pandadai">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="./css/pk10.css">
+<script type="text/javascript" src="./framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./js/pk13.js"></script>
+
+</head>
+
+<body>
+	<div>
+		<div id="histroyRecordDiv">
+			<p>请先录入历史数据，以作参考。</p>
+			<p>每条格式如：“583544&#009;03,06,02,07,04,01,10,05,08,09&#009;2017/04/04 18:47”，允许同时录入多条。（期数、号码、时间之间为制表符，非空格）</p>
+			<textarea id="histroyRecordTextArea" rows="10" cols="120"></textarea>
+			<button id="histroyRecordButton">确定</button>
+		</div>
+	</div>
+	<div>
+		初始信息配置：<br>
+		初始金额：<input type="text" id="originalSumMoneyInput" value="5000">元 <button id="originalSumMoneyButton">确定</button><br>
+		每局下注金额：<input type="text" id="backMoneyInput" value="900">元 <button id="backMoneyButton">确定</button><br>
+		收到下注信号后空<input type="text" id="backDropNumInput" value="0">手追 <button id="backDropNumButton">确定</button><br>
+		连追<input type="text" id="backNumInput" value="3">手  <button id="backNumButton">确定</button><br>
+	</div>
+	<br>
+	<div>
+		当前配置结果：<br>
+		初始金额：<span id="originalSumMoneySpan">5000</span> 元<br>
+		每局下注金额：<span id="backMoneySpan">900</span> 元<br>
+		收到下注信号空 <span id="backDropNumSpan">0</span> 手开始，追 <span id="backNumSpan">3</span> 手停止<br>
+	</div>
+	<hr>
+	<div>
+		<div>
+			<table id="perDayTable">
+				<thead>
+						<tr>
+							<td>日期</td>
+<!-- 							<td>结束金额（单位：元）</td> -->
+<!-- 							<td>对比猜中次数</td> -->
+							<td>对比猜错次数</td>
+							<td>猜错车号</td>
+<!-- 							<td>操作</td> -->
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+			</table>
+		</div>
+		<div>
+			<table id="compareTable">
+				<thead>
+						<tr>
+							<td rowspan="2">期数</td>
+							<td rowspan="2">时间</td>
+<!-- 							<td colspan="10">配道（<span class="compareDay"></span>）</td> -->
+							<td colspan="10">主道（<span class="mainDay"></span>）</td>
+							<td rowspan="2">猜错车号</td>
+<!-- 							<td rowspan="2">（主道）期数</td> -->
+							<td colspan="3">日期选择
+								<select class="mainDayDateSelect">
+								</select>
+							</td>
+						</tr>
+						<tr>
+<!-- 							<td class="1">1 道</td> -->
+<!-- 							<td class="2">2 道</td> -->
+<!-- 							<td class="3">3 道</td> -->
+<!-- 							<td class="4">4 道</td> -->
+<!-- 							<td class="5">5 道</td> -->
+<!-- 							<td class="6">6 道</td> -->
+<!-- 							<td class="7">7 道</td> -->
+<!-- 							<td class="8">8 道</td> -->
+<!-- 							<td class="9">9 道</td> -->
+<!-- 							<td class="10">10 道</td> -->
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+							<td class="">下注（元）</td>
+							<td class="">彩金（元）</td>
+							<td class="">本金（元）</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

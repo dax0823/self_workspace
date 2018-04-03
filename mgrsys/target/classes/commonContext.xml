@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="adminImpl" class="com.pandadai.common.dao.impl.AdminDaoImpl">
+		<property name="jdbc">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	<!-- <bean id="loginImpl" class="com.pandadai.finance.dao.LoginImpl" > -->
+	<!-- <property name="jdbc"><ref bean="jdbcTemplate" /></property> -->
+	<!-- </bean> -->
+
+	<!-- 文件导出模块注释 -->
+	<bean id="exportHandler" class="com.pandadai.common.handler.ExportFileHandler">
+		<!-- 充值总览 -->
+		<property name="inpourHomeImpl" ref="inpourHomeImpl" />
+		<!-- <property name="outputPath" value="D:\pandadai 导出文件" /> -->
+		<property name="inpourHomeDetailHeader" value="时间,宝付（单位：元）,易生支付（单位：元）,线下（单位：元）,总额（单位：元）" />
+		<!-- 线下充值奖励 -->
+		<property name="inpourRewardImpl" ref="inpourRewardImpl" />
+		<property name="inpourRewardHeader" value="客户id,月份,客户名称,奖励金额（单位：元）,充值金额（单位：元）" />
+		<!-- 提现记录 -->
+		<property name="inpourWithdrawImpl" ref="inpourWithdrawImpl" />
+<!-- 		<property name="inpourWithdrawHeader" value="客户id,客户名称,收款人姓名,银行账号,开户行省名,开户行市名,开户行,银行名称,提现金额（单位：元）,手续费（单位：元）" /> -->
+		<property name="inpourWithdrawHeader"
+			value="提现 id,申请提现时间,提现金额（单位：元）,手续费（单位：元）,到账（单位：元）,提现状态,客户id,客户名称,收款人姓名,银行账号,开户行,银行名称,开户行省名,开户行市名" />
+<!-- select mw.id withdraw_id, FROM_UNIXTIME(mw.add_time) withdraw_time, mw.withdraw_money, mw.withdraw_fee, mw.success_money -->
+<!-- 					, case mw.withdraw_status when '0' then '待审核' when '1' then '处理中' when '2' then '已提现' when '3' then '未通过' else mw.withdraw_status end withdraw_status -->
+<!-- 					, mm.id user_id, mm.user_name, mmi.real_name, mb.bank_num, mb.bank_address, mb.bank_name, mb.bank_province, mb.bank_city -->
+		<!-- 投资总览 -->
+		<property name="investHomeImpl" ref="investHomeImpl" />
+		<property name="investHomeHeader" value="投标id,名称,金额（单位：元）,利息（单位：元）,利率（%）,奖励利率（%）,期限（月）,到期日" />
+		<!-- 单个投标明细 -->
+		<property name="investHomeDetailHeader" value="投资人,真实姓名,投资金额（单位：元）,投标名称,利息总额（含奖励，单位：元）,利率（%）" />
+		<property name="investHomeSumInterestHeader" value="投资人,金额（单位：元）,奖励（单位：元）,利率（%）,利息（单位：元）,期限（月）" />
+		
+		<!-- 管理员统计信息 -->
+		<property name="investAdminUserImpl" ref="investAdminUserImpl" />
+		<property name="investAdminHeader" value="管理员id,管理员姓名,真实姓名,是否客服,客服奖金（单位：元）" />
+		
+		<!-- 管理员统计信息 -->
+		<property name="bizLotteryLogImpl" ref="bizLotteryLogImpl" />
+		<property name="bizLotteryLogHeader" value="用户id,用户名称,真实姓名,手机号,奖品,相关信息,抽奖时间" />
+		
+		<!-- 充值时间段内记录 -->
+		<property name="inpourDetailImpl" ref="inpourDetailImpl" />
+		<property name="inpourDetailHeader" value="充值时间,用户名,当天充值总额（单位：元）,用户id,充值方式,无关列（可无视）" />
+		
+		<!-- 某月发标列表 -->
+		<property name="reportBorrowDaoImpl" ref="reportBorrowDaoImpl" />
+		<property name="reportBorrowHeader" value="发标id,标名,发标日期,借款额度（单位：元）,期限（月）,借款利率（%）,奖励（%）,投标利息（单位：元）,借款管理费（单位：元）,投资管理费（单位：元）,收入（单位：元）,息差（单位：元）" />
+		
+		<!-- 某月秒标列表 -->
+		<property name="reportSecondHeader" value="发标id,标名,发标日期,借款额度（单位：元）,借款利率（%）,利息（单位：元）,手续费（单位：元）,最终获利（单位：元）" />
+		
+		<!-- 投标中投资人信息 -->
+		<property name="reportFilingDaoImpl" ref="reportFilingDaoImpl" />
+		<property name="reportFilingHeader" value="用户id,用户名,真实姓名,身份证号,投资金额（单位：元）,利息（单位：元）,电话,银行名称,银行账号" />
+		
+		
+	</bean>
+
+	<!-- 图形验证码 -->
+	<bean id="captchaHandler" class="com.pandadai.common.handler.CaptchaHandler">
+	</bean>
+</beans>

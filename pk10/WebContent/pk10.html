@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>赛车pk10-辅助工具</title>
+<meta http-equiv="description" content="pandadai">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="./css/pk10.css">
+<script type="text/javascript" src="./framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./js/pk10.js"></script>
+
+</head>
+
+<body>
+	<div>
+		<div id="histroyRecordDiv">
+			<p>请先录入历史数据，以作参考。</p>
+			<p>每条格式如：“583544&#009;03,06,02,07,04,01,10,05,08,09”，允许同时录入多条。（期数与号码中间为制表符，非空格）</p>
+			<textarea id="histroyRecordTextArea" rows="10" cols="120"></textarea>
+			<button id="histroyRecordButton">确定</button>
+		</div>
+		<div id="contentDiv">
+			<div id="backConfigDiv">
+				<p>请先配置下注信息：</p>
+				<table id="configTable">
+					<thead>
+						<tr>
+							<td>下注名称</td>
+							<td>实际金额（单位：元）</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="name"><input type="text" value="测试筹码"></td>
+							<td class="money"><input type="text" value="100"></td>
+							<td><button id="addConfigButton">添加</button></td>
+						</tr>
+					</tbody>
+				</table>
+				<p>配置完成后，请<button class="importConfig">点击此处</button>，将配置信息填入下方表格中。</p>
+			</div>
+			<div id="selfInfoDiv">
+				<div class="backDiv">
+				<hr>
+					<p>还可下注 <span id="backNum"></span> 笔</p>
+					<p>收支情况：￥<span id="income">0</span></p>
+					<p>当前下注情况：<span class="backShow"></span></p>
+				</div>
+				<hr>
+				<p class="pRules">固定规则：
+					<!-- <input type="radio" name="rules" class="1" checked="checked">规则 1 
+					| <input type="radio" name="rules" class="2">规则 2 
+					| <input type="radio" name="rules" class="3">规则 3 
+					| <input type="radio" name="rules" class="4">规则 4  -->
+					<button class="1">规则 1 </button>
+					 | <button class="2">规则 2 </button>
+					 | <button class="3">规则 3 </button>
+					 | <button class="4">规则 4 </button>
+				</p>
+				<div class="configRulesAllDiv">
+					<div class="pConfigRules">【普通】可配置规则：
+						<table>
+							<thead>
+								<tr>
+									<td>主车</td>
+									<td>所需追车</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mainCar">
+										<select id="mainCarSelect">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</td>
+									<td class="followCar">
+										<select id="followCarSelect">
+											<option value="1">1</option>
+											<option value="2" selected="selected">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</td>
+									<td><button id="addConfigRulesButton">添加</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="pHeadTailConfigRules">【首尾】可配置规则：
+						<table>
+							<thead>
+								<tr>
+									<td>主车</td>
+									<td>所需追车</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mainCar">
+										<select id="mainCarSelectHeadTail">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</td>
+									<td class="followCar">首尾</td>
+									<td><button id="addHeadTailConfigRulesButton">添加</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="pChampionConfigRules">【冠亚】可配置规则：
+						<table>
+							<thead>
+								<tr>
+									<td>主车</td>
+									<td>所需追车</td>
+									<td>操作</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="mainCar">
+										<select id="mainCarSelectChampion">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</td>
+									<td class="followCar">冠亚</td>
+									<td><button id="addChampionConfigRulesButton">添加</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div>
+					连中时，下注次数上限为：<span class="configRulesTimesSpan">3</span> 次（默认为 3 次）。
+					<br>
+					修改为：<input type="text" id="configRulesTimesInput" value="3">次
+					<button id="configRulesTimesButton">确定</button>
+				</div>
+				<br>
+				快速添加【普通】可配置规则：【1】 追【3,4,5,6,7】<button id="addConfigRules34567Button">添加</button><br>
+				快速添加【普通】可配置规则：【1】 追【3,4,5,6,7,8】<button id="addConfigRules345678Button">添加</button><br>
+				是否需要跳号（默认为跳号）：<input id="deleteFollowCarButton" type="checkbox" checked="checked">
+				<div class="pRules2">已有可配置规则：
+					<table id="rulesTable">
+						<thead>
+							<tr>
+<!-- 								<td><span class="mainCarBGColor">主车</span></td> -->
+<!-- 								<td><span class="winBGColor">追车队列</span></td> -->
+								<td>主车</td>
+								<td>追车队列</td>
+								<td>操作</td>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					
+				</div>
+				<hr>
+				<p>
+					<button id="getRecordButton">点我</button>获取最新记录（调试使用）<span class="isNewest"></span>
+					<span>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button id="getBeforeDataButton">获取前一天数据</button>
+						<button id="getNextDataButton">获取后一天数据</button>
+						<button id="countPerDayButton">统计每日结果</button>
+					</span>
+					
+					<table id="countPerDayTable">
+						<thead>
+							<tr>
+								<td>日期</td>
+								<td>结束金额（元）</td>
+								<td>完成完全连中次数</td>
+								<td>当日最大金额（元）</td>
+								<td>当日最小金额（元）</td>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</p>
+			</div>
+			<div id="recordDivRule1" class="ruleDivClass">
+				<h4>规则一：大小 => 单双</h4>
+				<table id="recordTableRule1">
+					<thead>
+						<tr>
+							<td rowspan="2">时间</td>
+							<td rowspan="2">期号</td>
+							<td colspan="10">开奖号码</td>
+							<td rowspan="2">冠亚军和</td>
+							<td rowspan="2">收支明细</td>
+						</tr>
+						<tr class="trWay">
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+						</tr>
+						<tr class="trBackWay">
+							<td class="time">未发布</td>
+							<td class="period">已下注</td>
+							<td class="1"></td>
+							<td class="2"></td>
+							<td class="3"></td>
+							<td class="4"></td>
+							<td class="5"></td>
+							<td class="6"></td>
+							<td class="7"></td>
+							<td class="8"></td>
+							<td class="9"></td>
+							<td class="10"></td>
+							<td class="sum"></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div id="recordDivRule2" class="ruleDivClass">
+				<h4>规则二：单双 => 大小</h4>
+				<table id="recordTableRule2">
+					<thead>
+						<tr>
+							<td rowspan="2">时间</td>
+							<td rowspan="2">期号</td>
+							<td colspan="10">开奖号码</td>
+							<td rowspan="2">冠亚军和</td>
+							<td rowspan="2">收支明细</td>
+						</tr>
+						<tr class="trWay">
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+						</tr>
+						<tr class="trBackWay">
+							<td class="time">未发布</td>
+							<td class="period">已下注</td>
+							<td class="1"></td>
+							<td class="2"></td>
+							<td class="3"></td>
+							<td class="4"></td>
+							<td class="5"></td>
+							<td class="6"></td>
+							<td class="7"></td>
+							<td class="8"></td>
+							<td class="9"></td>
+							<td class="10"></td>
+							<td class="sum"></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div id="recordDivRule3" class="ruleDivClass">
+				<h4>规则三：和值+大【<span class="rule3Big"></span>】小【<span class="rule3Small"></span>】 => 单双 => 大小</h4>
+				<table id="recordTableRule3">
+					<thead>
+						<tr>
+							<td rowspan="2">时间</td>
+							<td rowspan="2">期号</td>
+							<td colspan="10">开奖号码</td>
+							<td rowspan="2">冠亚军和</td>
+							<td rowspan="2">计算</td>
+							<td rowspan="2">收支明细</td>
+						</tr>
+						<tr class="trWay">
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+						</tr>
+						<tr class="trBackWay">
+							<td class="time">未发布</td>
+							<td class="period">已下注</td>
+							<td class="1"></td>
+							<td class="2"></td>
+							<td class="3"></td>
+							<td class="4"></td>
+							<td class="5"></td>
+							<td class="6"></td>
+							<td class="7"></td>
+							<td class="8"></td>
+							<td class="9"></td>
+							<td class="10"></td>
+							<td class="sum"></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div id="recordDivRule4" class="ruleDivClass">
+				<h4>规则四：和值+单【<span class="rule4Odd"></span>】双【<span class="rule4Even"></span>】 => 大小 => 单双</h4>
+				<table id="recordTableRule4">
+					<thead>
+						<tr>
+							<td rowspan="2">时间</td>
+							<td rowspan="2">期号</td>
+							<td colspan="10">开奖号码</td>
+							<td rowspan="2">冠亚军和</td>
+							<td rowspan="2">计算</td>
+							<td rowspan="2">收支明细</td>
+						</tr>
+						<tr class="trWay">
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+						</tr>
+						<tr class="trBackWay">
+							<td class="time">未发布</td>
+							<td class="period">已下注</td>
+							<td class="1"></td>
+							<td class="2"></td>
+							<td class="3"></td>
+							<td class="4"></td>
+							<td class="5"></td>
+							<td class="6"></td>
+							<td class="7"></td>
+							<td class="8"></td>
+							<td class="9"></td>
+							<td class="10"></td>
+							<td class="sum"></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<!-- 可配置规则 -->
+			<div id="recordDivConfigRule" class="ruleDivClass"></div>
+		</div>
+	</div>
+</body>
+</html>

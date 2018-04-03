@@ -1,0 +1,36 @@
+<div id="adjIntegralDiv">
+	<b>客户投标积分列表</b><br /> 
+	（默认查询最近一个月内注册的用户数据）<br /> 
+	注册时间：<input type="text" class="duringDate" /><input type="button" class="btn clear" value="清空" /><br />
+	请输入所要查询的客户名称（模糊查询）：<input type="text" class="userName" /><br/>
+	<input type="button" id="adjIntegralCustomerQueryBtn" class="btn" value="查询" /><br />
+	<table id="adjIntegralCustomerTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<br/>
+	<div id="adjIntegralLogDiv">
+		<hr>
+		<b><span class="customer"></span>的积分日志</b>
+		<table id="adjIntegralLogTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<br/>
+		<div>
+			<h3>修改客户投标积分</h3>
+			<input type="hidden" class="userId" />
+			<input type="hidden" class="integral" />
+			<input type="hidden" class="activeIntegral" />
+			<input type="radio" name="radio" class="addtion" checked="checked"/> 增加用户积分：<input type="text" value="10"><br/>
+			<input type="radio" name="radio" class="reduce" /> 减少用户积分：<input type="text" value="10"><br/>
+			说明：<input type="text" class="description" size="50" value="mgrsys系统，人工修改用户积分"><br/>
+			<input type="button" class="btn"  value="确定" />
+		</div>
+		<br/>
+	</div>
+</div>

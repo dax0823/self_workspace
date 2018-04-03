@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>赛车pk10-辅助工具（综合）</title>
+<meta http-equiv="description" content="pandadai">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" type="text/css" href="./css/pk10.css">
+<script type="text/javascript" src="./framework/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./js/pk14.js"></script>
+
+</head>
+
+<body>
+	<div>
+		<div id="histroyRecordDiv">
+			<p>请先录入历史数据，以作参考。</p>
+			<p>每条格式如：“583544&#009;03,06,02,07,04,01,10,05,08,09&#009;2017/04/04 18:47”，允许同时录入多条。（期数、号码、时间之间为制表符，非空格）</p>
+			<textarea id="histroyRecordTextArea" rows="10" cols="120"></textarea>
+			<button id="histroyRecordButton">确定</button>
+		</div>
+	</div>
+	<div>
+		初始信息配置：<br>
+		初始金额：<input type="text" id="originalSumMoneyInput" value="5000">元 <button id="originalSumMoneyButton">确定</button><br>
+		每局下注金额：<input type="text" id="backMoneyInput" value="900">元 <button id="backMoneyButton">确定</button><br>
+		匹配规则：<button id="rulesDoubleRoadButton">对子（追车道）</button> | <button id="rulesDoubleNumButton">对子（追车号）</button> | <button id="rulesTripleButton">三连</button><br>
+		匹配天数：<input type="text" id="rulesDaysInput" value="3">天 <button id="rulesDaysButton">确定</button><br>
+	</div>
+	<br>
+	<div>
+		当前配置结果：<br>
+		初始金额：<span id="originalSumMoneySpan">5000</span> 元<br>
+		每局下注金额：<span id="backMoneySpan">900</span> 元<br>
+		当前匹配规则：<span id="currRuleSpan">对子（追车道）</span><br>
+<!-- 		当前匹配规则：<span id="currRuleSpan">三连</span><br> -->
+		当前匹配天数：<span id="currRulesDaysSpan">3</span> 天<br>
+		<button id="reloadDataTableButton">重新加载数据表格</button>
+	</div>
+	<hr>
+	<div>
+		<div>
+			<table id="perDayTable">
+				<thead>
+						<tr>
+							<td>日期</td>
+<!-- 							<td>结束金额（单位：元）</td> -->
+							<td>猜中次数</td>
+							<td>猜错次数</td>
+							<td>最大连续正确次数【最后一条期号】</td>
+							<td>（“最大连续正确次数”出现前的）连错次数【最后一条期号】</td>
+<!-- 							<td>猜错车号</td> -->
+							<td>需下注车号/道（参考）</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+			</table>
+		</div>
+		<div>
+			<table id="compareTable">
+				<thead>
+						<tr>
+							<td rowspan="2">期数</td>
+							<td rowspan="2">时间</td>
+<!-- 							<td colspan="10">配道（<span class="compareDay"></span>）</td> -->
+							<td colspan="10">主道（<span class="mainDay"></span>）</td>
+<!-- 							<td rowspan="2">猜错车号</td> -->
+							<td rowspan="2">下注车号/道</td>
+							<td colspan="3">
+								<button id="getBeforeDayButton">前一天</button>
+								日期选择<select class="mainDayDateSelect"></select>
+								<button id="getNextDayButton">后一天</button>
+							</td>
+						</tr>
+						<tr>
+							<td class="1">1 道</td>
+							<td class="2">2 道</td>
+							<td class="3">3 道</td>
+							<td class="4">4 道</td>
+							<td class="5">5 道</td>
+							<td class="6">6 道</td>
+							<td class="7">7 道</td>
+							<td class="8">8 道</td>
+							<td class="9">9 道</td>
+							<td class="10">10 道</td>
+							<td class="">下注（元）</td>
+							<td class="">彩金（元）</td>
+							<td class="">本金（元）</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

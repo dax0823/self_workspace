@@ -1,0 +1,92 @@
+<div id="finInvestCustomerDiv">
+	（默认查询最近一个月内注册的用户数据）<br /> 
+	用户名称（模糊匹配）：<input	type="text" class="userName" value="" /><br />
+	真实姓名（模糊匹配）：<input type="text" class="realName" value="" /><br />
+	推荐人用户名称（模糊匹配）：<input type="text" class="recommendName" value="" /><br />
+	注册时间：<input type="text" class="duringDate" /><input type="button" class="btn clear" value="清空" /><br />
+	<input type="button" id="finInvestCustomerQueryBtn" class="btn" value="查询" /><br />
+	<hr>
+	<table id="finInvestCustomerTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<br/>
+	<div id="finInvestCustomerInfoDiv">
+		<hr>
+		<b>客户详细信息</b>
+		<table id="finInvestCustomerInfoTable">
+			<tr>
+				<td>用户名称：<span class="tdUserName"></span></td>
+				<td>真实姓名：<span class="tdRealName"></span></td>
+			</tr>
+			<tr>
+				<td>可用余额：<span class="tdAccountMoney"></span>元</td>
+				<td>累积投资额度：<span class="tdSumInvest"></span>元</td>
+			</tr>
+			<tr>
+				<td>身份证：<span class="tdIDCard"></span></td>
+				<td>银行账号：<span class="tdBankNum"></span></td>
+			</tr>
+			<tr>
+				<td>银行名称：<span class="tdBankName"></span></td>
+				<td>银行开户行：<span class="tdBankAddr"></span></td>
+			</tr>
+			<tr>
+				<td>当前待收（本金）：<span class="tdSumUncollected"></span>元(<span class="pieCharts">饼状图</span>)</td>
+				<td>推荐人：<span class="tdRecommendName"></span></td>
+			</tr>
+			<tr>
+				<td colspan="2">已邀请的好友：<span class="tdInvitedNames"></span></td>
+			</tr>
+			<tr class="pieChartsTr">
+				<td colspan="2">
+					<input type="button" class="btn"  value="收起" />
+					<div class="pieChartsDiv"></div>
+				</td>
+			</tr>
+		</table>
+		<hr>
+		<b>客户待收详情</b>
+		<table id="finInvestCustomerUncollectedDetailTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<hr>
+		<b>客户充值记录</b>
+		<table id="finInvestCustomerInpourTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<hr>
+		<b>客户投标记录</b>
+		<table id="finInvestCustomerInvestTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<hr>
+		<b>利息发放记录</b>
+		<table id="finInvestCustomerInterestTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<hr>
+		<b>回款（本金）时间记录</b>
+		<table id="finInvestCustomerBackCapitalTable">
+			<thead>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<br/>
+</div>

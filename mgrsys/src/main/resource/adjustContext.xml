@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<bean id="adjIntegralImpl" class="com.pandadai.adjust.dao.impl.AdjustIntegralDaoImpl">
+		<property name="jdbc" ref="jdbcTemplate" />
+		<!-- 根据客户名称查询积分列表 -->
+		<property name="sqlIntegralCustomer">
+			<value>
+				select m.id, m.user_name, m.integral, m.active_integral, FROM_UNIXTIME(m.reg_time) reg_time from lzh_members m
+					where 2=2
+						and 1=1
+				order by m.reg_time desc;
+			</value>
+		</property>
+		<property name="sqlIntegralCustomerDefaultCondition" value="and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= FROM_UNIXTIME(m.reg_time)" />
+		
+		<!-- 客户积分日志记录 -->
+		<property name="sqlIntegralLog">
+			<value>
+				select type, affect_integral, active_integral, account_integral, info, FROM_UNIXTIME(add_time) time from LZH_MEMBER_INTEGRALLOG 
+				 	where 2=2
+<!-- 						and uid = 44 -->
+						and 1=1
+				order by add_time desc;
+			</value>
+		</property>
+		
+		<!-- 修改客户积分 -->
+		<property name="sqlUpdateIntegralByUserId">
+			<value>
+				update lzh_members set integral = integral * 1, active_integral = active_integral * 1
+					where 2=2
+<!-- 						and id = 44 -->
+						and 1=1;
+			</value>
+		</property>
+		
+		<!-- 增加客户积分日志 -->
+		<property name="sqlInsertIntegralLogByUserId">
+			<value>
+<!-- 				insert into LZH_MEMBER_INTEGRALLOG values(id, 44, 4, 1, 2594, 3824, 'mgrsys系统，人工修改投标积分', NOW(), '220.231.48.246') -->
+				insert into LZH_MEMBER_INTEGRALLOG values(id, ?, 5, ?, ?, ?, ?, unix_timestamp(NOW()), ?);
+			</value>
+		</property>
+	</bean>
+	<bean id="adjIntegralHandler" class="com.pandadai.adjust.handler.AdjustIntegralHandler">
+		<property name="adjIntegralImpl" ref="adjIntegralImpl" />
+		<property name="integralLogDescribe" value="mgrsys系统，人工修改用户积分" />
+	<!-- 解决其他 ip 重复操作问题 -->
+		<property name="integralLogIPFilter" value="220.231.48.,127.0.0.1,localhost,219.237.235." />
+	</bean>
+</beans>

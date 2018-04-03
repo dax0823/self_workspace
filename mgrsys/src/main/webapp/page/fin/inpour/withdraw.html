@@ -1,0 +1,18 @@
+<div id="finInpourWithdrawDiv">
+	（默认查询最近七天内数据）<br/>
+		时间范围：<input type="text" class="duringDate" />
+		<input type="button" class="btn clear" value="清空" /><br /> 
+		<input type="radio" name="radio" value="0" />待审核<br /> 
+		<input type="radio" name="radio" value="1"  checked="checked" />审核通过，处理中<br /> 
+		<input type="radio" name="radio" value="2" />已提现<br /> 
+		<input type="radio" name="radio" value="3" />审核未通过<br /> 
+		<input type="button" id="finInpourWithdrawQueryBtn" class="btn" value="查询" />
+		<a id="finInpourWithdrawExportBtn" class="fileExport">提现记录导出</a>
+		<br /><hr>
+	<table id="finInpourWithdrawTable">
+		<thead>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>

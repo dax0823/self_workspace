@@ -1,0 +1,257 @@
+table {
+	border: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	padd: expression(this.cellPadding =     0);
+}
+
+th,td {
+	padding: 0;
+}
+
+#loginDiv {
+	width: 850px;
+	height: 130px;
+	position: absolute;
+	left: 30%;
+	Top: 35%;
+}
+
+#loginDiv div.loginLogo {
+	float: left;
+}
+
+#loginDiv div.loginForm {
+	float: right;
+}
+
+span.userInfoDiv {
+	float: right;
+}
+
+div.loginForm img {
+	cursor: pointer;
+	margin-bottom: -5px;
+}
+
+a.logout {
+	cursor: pointer;
+}
+
+.fileExport {
+	cursor: pointer;
+}
+
+#finInpourHomeTab span,#finInpourDetailTab span {
+	background-color: #DCDCDC;
+	cursor: pointer;
+}
+
+#finInpourHomeTab span.on,#finInpourDetailTab span.on {
+	background-color: #DEB887;
+	font-weight: bold;
+	color: blue;
+}
+/* #finInpourHomeContentDiv div.div {
+	display: none;
+}
+
+#finInpourHomeContentDiv div.on {
+	display: block;
+}  */
+div.div,div.cusDiv {
+	display: none;
+}
+
+div.on {
+	display: block;
+}
+
+#finInpourHomeInpourTab span {
+	background-color: #DCDCDC;
+	cursor: pointer;
+}
+
+#finInpourHomeInpourTab span.on {
+	background-color: #E9967A;
+	font-weight: bold;
+	color: blue;
+}
+
+/* #finInpourHomeInpourDiv div.div {
+	display: none;
+}
+
+#finInpourHomeInpourDiv div.on {
+	display: block;
+}  */
+#finInvestCustomerInfoTable td {
+	width: 300px;
+}
+
+#finInvestCustomerInfoTable span.pieCharts {
+	text-decoration: underline;
+	cursor: pointer;
+	color: darkblue;
+	font-weight: bold; 
+}
+
+#finInvestCustomerInfoTable tr.pieChartsTr {
+	display: none;
+}
+
+#bizHomeTable td {
+	width: 350px;
+}
+
+#bizHomeTable tr.trAuto,tr.trBalance {
+	cursor: pointer;
+}
+
+#bizHomeTable tr.trAuto:HOVER {
+	background-color: #FFE4B5;
+}
+
+#bizHomeTable tr.trBalance td:HOVER {
+	background-color: #6495ED;
+}
+
+#bizHomeDetailDiv input.btn {
+	margin-left: 20px;
+}
+
+#bizHomeBalanceDiv div.halfBalance {
+	float: left;
+	width: 49%;
+}
+
+#bizHomeBalanceDiv div.right {
+	float: right;
+}
+
+#bizHomeCustomerTable td, #bizHomeCustomerMoneyTable td {
+	width: 300px;
+}
+
+#bizHomeCustomerDiv {
+	clear: both;
+}
+
+#bizHomeCustomerMoneyTable {
+	background-color: #B0E0E6
+}
+#bizHomeCustomerMoneyTable h3 {
+	color: #0000CD;
+	font-weight: bold;
+}
+
+#bizHomeOtherTab span {
+	background-color: #DCDCDC;
+	cursor: pointer;
+}
+
+#bizHomeOtherTab span.on {
+	background-color: #E9967A;
+	font-weight: bold;
+	color: blue;
+}
+
+.remindDetailTable {
+	/* border-bottom-style: outset;
+	border-bottom-width: 1px;
+	border-right-style: outset;
+	border-right-width: 1px;
+	border-spacing: 0px; */
+	border: outset !important;
+	border-width: 1px !important;
+	border-color: #6495ED !important;
+}
+.remindDetailTableTheadTr {
+	background-color: #D2B48C !important;
+}
+.remindDetailTableTbody {
+	
+}
+.remindDetailTableTbody tr.odd {
+    background-color: #87CEEB !important;
+}
+
+.remindDetailCustomerDiv {
+	display: none;
+}
+.remindDetailCustomerTable {
+	border: outset !important;
+	border-width: 1px !important;
+	border-color: #6495ED !important;
+}
+.remindDetailCustomerTable td {
+	width: 300px;
+}
+
+#finTopHomeDiv div.top {
+	float: left;
+	width: 49%;
+}
+
+#finTopHomeDiv div.right {
+	float: right;
+}
+
+#finTopHomeDiv div.top .color {
+	color: #00008B;
+}
+
+#finTopHomeDiv div.top {
+	border:1px dashed #6495ED;
+	margin-bottom: 20px;
+}
+
+#finReportHomeInfoTable {
+	border:1px dashed #5F9EA0;
+	margin-top: 20px;
+}
+
+#finReportHomeInfoTable td {
+	width: 300px;
+}
+
+#finReportHomeInfoTable td span {
+	color: #A52A2A;
+}
+
+#finReportHomeInfoDiv div.container {
+	margin: 10px 0 0 0;
+	height: 250px;
+}
+
+#finReportBorrowInfoDiv div.container {
+	margin: 10px 0 0 0;
+	height: 250px;
+}
+
+#finInvestBorroworDiv div.sum span {
+	color: #A52A2A;
+}
+
+#finReportSecondInfoDiv div.container {
+	margin: 10px 0 0 0;
+	height: 250px;
+}
+
+#finInvestSecondDiv div.sum span {
+	color: #A52A2A;
+}
+
+#finReportFilingDiv table.condition tr {
+}
+#finReportFilingDiv table.condition td {
+	border:1px dashed #5F9EA0;
+	margin-bottom: 10px;
+}
+
+#finReportBorrowInfoTable td {
+	width: 300px;
+}
+#finReportBorrowInfoTable td span {
+	color: #8B0000;
+}
